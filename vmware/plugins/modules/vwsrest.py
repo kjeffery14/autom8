@@ -84,14 +84,16 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
         action=dict(required=True, type='str', choices=actions),
-        baseurl=dict(required=True, type='str'),     
+        baseurl=dict(required=False, type='str', default='https://localhost:8697/api'),     
         force=dict(required=False, default=False, type='bool'),
         log=dict(required=False, default='INFO', choices=['DEBUG', 'INFO', 'ERROR', 'CRITICAL']),
-        password=dict(required=True, type='str', no_log=True),
-        username=dict(required=True, type='str')
+        password=dict(required=False, type='str', no_log=True),
+        username=dict(required=False, type='str')
        ),
-        # required_together=[['required1', 'required2']],
-        # required_if [('argument', 'value', ('required1', 'required2'))],
+        required_together=[['username', 'password']],
+        required_if=[
+            ('action', 'get_vms', ('baseurl', 'username'))
+        ],
         supports_check_mode=False
    )
 
