@@ -1,0 +1,17 @@
+---
+namespace: autom8
+name: vmware
+version: 2025.2.8
+readme: README.md
+authors:
+- Kevin Jeffery <kevin@microknight.com>
+description: VMware automation collection
+license:
+- Apache-2.0
+tags:
+- VMware
+dependencies: {}
+repository: https://github.com/kjeffery14/autom8
+# documentation:
+# homepage:
+# issues:
