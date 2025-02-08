@@ -9,6 +9,7 @@ description: IAM Middleware installation and configuration collection
 license:
 - Apache-2.0
 tags:
+- DB2
 - WAS
 - ISDS
 - ISVD
