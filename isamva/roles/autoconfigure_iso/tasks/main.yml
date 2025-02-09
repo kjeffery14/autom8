@@ -1,0 +1,27 @@
+---
+# isamva/roles/autoconfigure_iso/tasks/main.yml
+
+
+- name: Directory - {{ isamva_autoconfigure_dir }}
+  ansible.builtin.debug:
+    msg: "ISO: {{ isamva_autoconfigure_iso }}"
+    verbosity: 3
+  tags: always
+
+- name: Create Autoconfig directory
+  ansible.builtin.file:
+    path: "{{ isamva_autoconfigure_dir }}"
+    state: directory
+  tags: always
+
+- name: Template the Autoconfig metadata
+  template:
+    src: app-metadata.j2
+    dest: "{{ isamva_autoconfigure_dir }}/app-metadata"
+  tags: always
+
+- name: Create the autoconfig ISO
+  ansible.builtin.command: "genisoimage -J -R -o {{ isamva_autoconfigure_iso }} {{ isamva_autoconfigure_dir }}"
+  args:
+    creates: "{{ isamva_autoconfigure_iso }}"
+  tags: always

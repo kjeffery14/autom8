@@ -1,0 +1,7 @@
+---
+# isamva/roles/autoconfigure_iso/defaults/main.yml
+# @version 2025.2.9.0
+# @authore Kevin Jeffery
+
+isamva_autoconfigure_dir: "{{ playbook_dir }}/{{ isamva_environment | default('isamva') }}/{{ host_name }}/iso"
+isamva_autoconfigure_iso: "{{ playbook_dir }}/{{ isamva_environment | default('isamva') }}/{{ host_name }}.iso"
