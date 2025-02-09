@@ -1,6 +1,7 @@
 ---
 # isamva/roles/autoconfigure_iso/tasks/main.yml
-
+# @version v2025.2.9.0
+# @author Kevin Jeffery
 
 - name: Directory - {{ isamva_autoconfigure_dir }}
   ansible.builtin.debug:
