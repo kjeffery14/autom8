@@ -1,7 +1,7 @@
 ---
 namespace: autom8
 name: middleware
-version: 2024.0.0
+version: 2025.2.13
 readme: README.md
 authors:
 - Kevin Jeffery <kevin@microknight.com>

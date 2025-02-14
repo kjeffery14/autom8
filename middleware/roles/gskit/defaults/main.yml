@@ -1,0 +1,8 @@
+---
+# middleware/roles/gskit/defaults/main.yml
+# @version v2025.2.13.0
+# @author Kevin Jeffery
+
+gskit_archive: "{{ gskit_info[gskit_version]['archive'] }}"
+gskit_name: "{{ gskit_info[gskit_version]['name'] }}"
+gskit_version: 8.0.55.31

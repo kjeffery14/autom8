@@ -1,0 +1,37 @@
+---
+# middleware/roles/gskit/tasks/main.yml
+# @version v2025.2.13.0
+# @author Kevin Jeffery
+
+- name: Decompressing GSKit Package
+  ansible.builtin.unarchive:
+    creates: "{{ gskit_source_dir }}/{{ gskit_name }}"
+    dest: "{{ gskit_source_dir }}"
+    owner: "{{ gskit_owner | default(ansible_user) }}"
+    remote_src: yes
+    src: "{{ gskit_source_dir }}/{{ gskit_archive }}"
+  become: true
+  tags: always
+
+- name: GSKit Version
+  autom8.middleware.gsk8version:
+  register: ret_gsk8version
+  tags: always
+
+### Begin Block - Install/Upgrade
+- block:
+  - name: Install packages
+    package:
+      name: "{{ gskit_source_dir }}/{{ gskit_name }}/{{ item.name }}"
+    loop:
+      - name: "32/gskcrypt32-{{ gskit_version }}.linux.x86.rpm"
+      - name: "32/gskssl32-{{ gskit_version }}.linux.x86.rpm"
+      - name: "64/gskcrypt64-{{ gskit_version }}.linux.x86_64.rpm"
+      - name: "64/gskssl64-{{ gskit_version }}.linux.x86_64.rpm"
+    loop_control:
+      label: "{{ item.name }}"
+
+  become: true
+  when: not ret_gsk8version.data.installed or ret_gsk8version.data.version | version(gskit_version, 'lt')
+  tags: always
+### End Block - Install/Upgrade
