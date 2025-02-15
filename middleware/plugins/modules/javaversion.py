@@ -11,10 +11,11 @@ class javaversion:
     self.module = module
     self.module.debug("*** Process all Arguments")
     self.java_home  = self.module.params['java_home']
+    self.executable = '{java_home}/bin/java',format(java_home=self.java_home)
   
   def version(self):
     data = dict(version='none', installed=False)
-    if os.path.exists(self.java_home):
+    if os.path.exists(self.executable):
       data['installed'] = True
       stderr = self._run_command('-version')[2]
       stderr_lines = stderr.split('\n')
@@ -34,10 +35,10 @@ class javaversion:
     self.module.exit_json(changed=False, data=data)
   
   def _run_command(self, params):
-    cmd = '{0}/bin/java {1}'.format(self.java_home, params)
-    rc, stdout, stderr = self.module.run_command(cmd, use_unsafe_shell=True)
+    cmd = '{0} {1}'.format(self.executable, params)
+    rc, stdout, stderr = self.module.run_command(cmd)
     if rc > 0:
-      self.module.fail_json(changed=False, rc=rc, stdout=stdout, stderr=stderr)
+      self.module.fail_json(changed=False, msg=f'javaversion: {params}', rc=rc, stdout=stdout, stderr=stderr)
     return rc, stdout, stderr
 
 def main():
