@@ -1,0 +1,14 @@
+---
+# middleware/roles/javasdk/vars/main.yml
+# @author Kevin Jeffery
+# @version v2025.2.15.0
+
+javasdk_info:
+  "8.0.5.15":
+    archive: 8.0.5.15-ISS-JAVA-LinuxX64-FP0015.tar
+  "8.0.8.25":
+    archive: 8.0.8.25-ISS-JAVA-LinuxX64-FP0025.tar
+  "17.0.8.1":
+    archive: 17.0.8.1-ISS-JAVA-LinuxX64-FP001.tar
+  "17.0.11.0":
+    archive: 17.0.11.0-ISS-JAVA-LinuxX64-FP000.tar

@@ -1,0 +1,10 @@
+---
+# middleware/roles/javasdk/meta/main.yml
+# @version v2025.2.15.0
+# @author Kevin Jeffery
+galaxy_info:
+  author: Kevin Jeffery
+  description: Role to install JavaSDK
+  company: MicroKnight
+  license: Apache
+  min_ansible_version: 2.2

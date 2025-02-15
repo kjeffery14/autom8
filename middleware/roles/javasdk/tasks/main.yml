@@ -1,0 +1,27 @@
+---
+# middleware/roles/javasdk/tasks/main.yml
+# @version 2025.2.15.0
+# Java SDK Package for DB2 and ISDS
+
+- name: Get JavaSDK version
+  autom8.middleware.javaversion:
+    java_home: "{{ javasdk_home }}"
+  register: ret_javasdk
+  tags: always
+
+- name: Remove JavaSDK directory if upgrade
+  ansible.builtin.file:
+    path: "{{ javasdk_home }}"
+    state: absent
+  when:
+    - ret_javasdk.data.installed | bool
+    - ret_javasdk.data.version | version(javasdk_version, 'lt')
+  tags: always
+
+- name: Decompressing Java SDK Package
+  unarchive:
+    src: "{{ javasdk_source_dir }}/{{ javasdk_archive }}"
+    dest: "{{ javasdk_target_dir }}"
+    remote_src: yes
+    creates: "{{ javasdk_home }}"
+  tags: always
