@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # middleware/plugins/modules/javaversion.py
-# @version v2025.2.13.0
+# @version v2025.2.15.0
 # @author Kevin Jeffery
 
 from ansible.module_utils.basic import AnsibleModule # type: ignore[import]
