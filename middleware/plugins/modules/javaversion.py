@@ -11,7 +11,7 @@ class javaversion:
     self.module = module
     self.module.debug("*** Process all Arguments")
     self.java_home  = self.module.params['java_home']
-    self.executable = '{java_home}/bin/java',format(java_home=self.java_home)
+    self.executable = '{java_home}/bin/java'.format(java_home=self.java_home)
   
   def version(self):
     data = dict(version='none', installed=False)
