@@ -1,0 +1,163 @@
+---
+# isamva/roles/baseline/main.yml.yml
+# @version v2025.2.16
+# @author Kevin Jeffery
+
+- name: Check ISAM appliance for First Steps Execution
+  ansible.builtin.uri:
+    url: "https://{{ ansible_host }}/lmi"
+    user: admin
+    password: admin
+    method: GET
+    return_content: yes
+    force_basic_auth: yes
+    status_code: 200, 403
+    validate_certs: false
+    headers:
+     "Accept": "application/json"
+  check_mode: no
+  register: ret_firststeps
+
+- name: Basic Setup
+  ansible.builtin.include_tasks: firststeps.yml
+  when:
+    - ret_firststeps.status == 200
+    - ret_firststeps.json.sla is defined
+
+- name: Change Admin Password if necessary
+  include_tasks: change_password.yml
+  when:
+    - ret_firststeps.status == 200
+    - ret_firststeps.json.sla is not defined
+
+# - name: Baseline Network Configuration
+#   include_role:
+#     name: isam_config/baseline_network
+
+# - meta: flush_handlers
+
+# - name: Activate Modules
+#   include_role:
+#     name: isam_config/activate_modules
+#     apply:
+#       tags:
+#         - baseline
+#         - activation
+#   vars:
+#     activation_keys: "{{ isamva_activation_keys }}"
+#   when: isamva_activation_keys is defined
+
+# - meta: flush_handlers
+
+# - name: Update Management Certificate
+#   include_role:
+#     name: isam_config/management_ssl_certificate
+#   vars:
+#     ssl_cert_cert: "../files/personal_certs/{{ lmi_cert_file.name }}"
+#     ssl_cert_pwd: "{{ lmi_cert_file.pwd }}"
+#     ssl_cert_notafter: "{{ lmi_cert_file.notafter | default('') }}"
+#   when: lmi_cert_file is defined
+
+# - meta: flush_handlers
+
+# - name: Common Advanced Tuning Parameters
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ isamva_advanced_tuning_parameters }}"
+
+# - name: Additional Advanced Tuning Parameters
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ isamva_additional_advanced_tuning_parameters }}"
+
+# - name: SSHD Advanced Tuning Parameters
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ isamva_sshd_advanced_tuning_parameters }}"
+
+# - name: Advanced Tuning Parameters (ISVA 10)
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ isva10_advanced_tuning_parameters }}"
+#   when:
+#   - isam_version is defined
+#   - isam_version is version('10.0.2', 'ge')
+
+# - name: MGA Advanced Tuning Parameters
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ mga_advanced_tuning_parameters }}"
+#   when: mga_user_registry is defined or mga_sps_page_notEscapedMacros is defined
+
+# - name: WGA Advanced Tuning Parameters
+#   include_role:
+#     name: isam_config/advanced_tuning_parameters
+#   vars:
+#     advanced_tuning_parameters: "{{ wga_advanced_tuning_parameters }}"
+#   when: wga_advanced_tuning_parameters is defined
+
+# - name: Administrator Settings
+#   include_role:
+#     name: isam_config/admin_config
+
+# - meta: flush_handlers
+
+# - name: Import Common Keystores
+#   include_role:
+#     name: isam_config/import_keystores
+#   vars:
+#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
+#     kdb_items: "{{ isamva_keystores }}"
+#   when: isamva_keystores is defined and isamva_keystores | length > 0
+
+# - name: Import CWGA Keystores
+#   include_role:
+#     name: isam_config/import_keystores
+#   vars:
+#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
+#     kdb_items: "{{ cwga_keystores }}"
+#   when: cwga_keystores is defined and cwga_keystores | length > 0
+
+# - name: Import EWGA Keystores
+#   include_role:
+#     name: isam_config/import_keystores
+#   vars:
+#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
+#     kdb_items: "{{ ewga_keystores }}"
+#   when: ewga_keystores is defined and ewga_keystores | length > 0
+
+# - name: Import MGA Keystores
+#   include_role:
+#     name: isam_config/import_keystores
+#   vars:
+#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
+#     kdb_items: "{{ mga_keystores }}"
+#   when: mga_keystores is defined and mga_keystores | length > 0
+
+# - name: Import RTSS Signer Certificates
+#   include_role:
+#     name: isam_config/import_signer_certificates
+#   vars:
+#     kdb_item:
+#       name: "rt_profile_keys"
+#       kdb: "rt_profile_keys.kdb"
+#     signer_certificates: "{{ isamva_signer_certificates }}"
+#     expired_certificates:
+#       - label: "CN=*.ice.ibmcloud.com,O=International Business Machines Corporation,L=Armonk,ST=New York,C=US"
+
+# - name: Configure MSAD Authentication
+#   include_role:
+#     name: isam_config/enable_msad_authentication
+#   when: msad_auth_admin is defined and msad_auth_bind_password is defined and msad_auth_bind_password != ''
+
+# - meta: flush_handlers
+
+# - name: Configure System Alert Forwarding
+#   include_role:
+#     name: isam_config/system_alerts
+#   when: isamva_system_alerts is defined

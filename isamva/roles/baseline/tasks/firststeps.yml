@@ -1,0 +1,82 @@
+---
+# isamva/roles/baseline/tasks/firststeps.yml
+
+- name: Accept Service Agreements
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.service_agreement.set
+  vars:
+    ansible_isam_password: admin
+
+- name: Get Last Boot Timestamp
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.firmware.get
+  check_mode: no
+  register: ret_last_boot
+
+- name: Extract Last Boot Timestamp
+  set_fact:
+    last_boot: "{{ ret_last_boot.data[0].last_boot }}"
+
+# set up LMI FIPS
+- name: Setup FIPS Mode
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.fips.set
+    isamapi:
+      fipsEnabled: "{{ isamva_fips_cfg.fipsEnabled }}"
+      tlsv10Enabled: "{{ isamva_fips_cfg.tlsv10Enabled }}"
+      tlsv11Enabled: "{{ isamva_fips_cfg.tlsv11Enabled }}"
+  register: ret_set_fips
+  vars:
+    ansible_isam_password: admin
+  when: isamva_fips_enabled
+
+# Restart after FIPS if needed
+- name: Restart after enabling FIPS
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.fips.restart
+  vars:
+    ansible_isam_password: admin
+  when:
+  - isamva_fips_enabled
+  - ret_set_fips.data.reboot is defined
+  - ret_set_fips.data.reboot | bool
+
+- name: Pause for Reboot -S {{ isamva_fips_restart_wait_time }} mins
+  ansible.builtin.pause:
+    minutes: "{{ isamva_fips_restart_wait_time }}"
+  when:
+    - isamva_fips_enabled | bool
+    - ret_set_fips.data.reboot is defined
+    - ret_set_fips.data.reboot
+
+# Make sure system restarted
+- name: Check FIPS settings for System Online Status
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.firmware.get
+  register: result
+  retries: 5
+  delay: 30
+  ignore_errors: true
+  until: result.rc == 0 and (result.data[0].last_boot != last_boot)
+  vars:
+    ansible_isam_password: admin
+  when:
+    - isamva_fips_enabled | bool
+    - ret_set_fips.data.reboot is defined
+    - ret_set_fips.data.reboot | bool
+
+# Complete the appliance set up
+- name: Complete Appliance Setup
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.setup_complete.set
+  vars:
+    ansible_isam_password: admin
+
+- name: Change Admin password
+  ansible.builtin.include_tasks: change_password.yml
+  when: isamva_first_steps_admin_pwd | bool
+
+- name: Fail Appliance if Running in Check Mode
+  fail:
+    msg: Appliance does not have First Steps Executed. No task will run successfully so failing.
+  when: ansible_check_mode

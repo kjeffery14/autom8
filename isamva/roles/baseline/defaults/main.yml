@@ -1,0 +1,13 @@
+---
+# isamva/roles/defaults/main.yml
+# @version v2025.2.16
+# @author Kevin Jeffery
+
+isamva_fips_cfg: 
+  fipsEnabled: true
+  tlsv10Enabled: false
+  tlsv11Enabled: false
+isamva_fips_restart_wait_time: 1
+isamva_fips_enabled: True
+isamva_first_steps_admin_pwd: True
+isamva_lmi_session_timeout: 720
