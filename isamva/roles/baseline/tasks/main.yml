@@ -29,7 +29,7 @@
     name: ibm.isam.base.change_admin_password
   vars:
     old_password: "{{ isamva_old_password }}"
-    new_password: "{{ ansible_isam_password }}"
+    new_password: "{{ isamva_new_password }}"
   when:
     - result is defined
     - result.status == 200
