@@ -38,7 +38,13 @@
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_interfaces
 
-# - name: Set Applicance Hostname
+- name: Set Applicance Hostname
+  ansible.builtin.include_role:
+    name: ibm.isam.set_network_hostname
+  vars:
+    set_network_hostname_hostname: "{{ host_name }}"
+  when: host_name is defined
+
 - name: DNS Configuration
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_dns
