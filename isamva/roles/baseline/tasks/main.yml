@@ -94,40 +94,36 @@
     advanced_tuning_parameters: "{{ isamva_advanced_tuning_parameters }}"
     ansible_command_timeout: 120
 
-# - name: SSHD Advanced Tuning Parameters
-#   include_role:
-#     name: isam_config/advanced_tuning_parameters
+# - name: hvdb_advanced_tuning_parameters: Advanced Tuning Parameters
+#   ansible.builtin.include_role:
+#     name: ibm.isam.base.configure_advanced_tuning_parameters
 #   vars:
-#     advanced_tuning_parameters: "{{ isamva_sshd_advanced_tuning_parameters }}"
+#     advanced_tuning_parameters: "{{ hvdb_advanced_tuning_parameters }}"
 
-# - name: Advanced Tuning Parameters (ISVA 10)
-#   include_role:
-#     name: isam_config/advanced_tuning_parameters
+# - name: Config Advanced Tuning Parameters
+#   ansible.builtin.include_role:
+#     name: ibm.isam.base.configure_advanced_tuning_parameters
 #   vars:
-#     advanced_tuning_parameters: "{{ isva10_advanced_tuning_parameters }}"
-#   when:
-#   - isam_version is defined
-#   - isam_version is version('10.0.2', 'ge')
+#     advanced_tuning_parameters: "{{ config_advanced_tuning_parameters }}"
 
-# - name: MGA Advanced Tuning Parameters
-#   include_role:
-#     name: isam_config/advanced_tuning_parameters
-#   vars:
-#     advanced_tuning_parameters: "{{ mga_advanced_tuning_parameters }}"
-#   when: mga_user_registry is defined or mga_sps_page_notEscapedMacros is defined
+- name: Administator Settings
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.admin.set
+    isamapi:
+      httpsPort: "{{ isamva_httpsPort | default(443) }}"
+      minHeapSize: "{{ isamva_minHeapSize | int }}"
+      maxHeapSize: "{{ isamva_maxHeapSize | int }}"
+      acceptClientCerts: "{{ isamva_acceptClientCerts | default('false') }}"
+      enabledTLS:
+      - "TLSv1.2"
+      enabledServerProtocols: "TLSv1.2"
+      enableSSLv3: "{{ false if isam_version is version('10.0.3', 'lt') else omit }}"
+      loginMessage: "{{ isamva_loginMessage }}"
+      loginHeader: "{{ isamva_environment | default('') }} {{ description | default(host_name) }}"
+      pendingChangesLifetime: "{{ isamva_pendingChangesLifetime | default(24) }}"
+  notify: Commit Changes and Restart
 
-# - name: WGA Advanced Tuning Parameters
-#   include_role:
-#     name: isam_config/advanced_tuning_parameters
-#   vars:
-#     advanced_tuning_parameters: "{{ wga_advanced_tuning_parameters }}"
-#   when: wga_advanced_tuning_parameters is defined
-
-# - name: Administrator Settings
-#   include_role:
-#     name: isam_config/admin_config
-
-# - meta: flush_handlers
+- meta: flush_handlers
 
 # - name: Import Common Keystores
 #   include_role:

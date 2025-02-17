@@ -7,6 +7,9 @@ isamva_fips_cfg:
   fipsEnabled: true
   tlsv10Enabled: false
   tlsv11Enabled: false
+isamva_loginMessage: Unauthorized Access Prohibited.
+isamva_minHeapSize: 1024
+isamva_maxHeapSize: 2048
 isamva_old_password: admin
 
 # Common Advanced Tuning Paramaters
