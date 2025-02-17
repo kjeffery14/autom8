@@ -8,3 +8,71 @@ isamva_fips_cfg:
   tlsv10Enabled: false
   tlsv11Enabled: false
 isamva_old_password: admin
+
+# Common Advanced Tuning Paramaters
+isamva_advanced_tuning_parameters:
+- key: sysctl.net.ipv4.ip_local_port_range
+  value: "{{ ip_local_port_range | default('16384 61000') }}"
+  tuning_action: set
+  comment: https://www-01.ibm.com/support/docview.wss?uid=swg21960611
+- key: nist.sp800-131a.strict
+  value: "true"
+  tuning_action: set
+  comment: "Advanced tuning for the FIPS and NIST SP800-131a configuration.  This will control whether TLS protocols prior to version 1.2 are enabled."
+- key: "sysctl.net.ipv4.tcp_fin_timeout"
+  value: "30"
+  tuning_action: "set"
+  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+- key: "sysctl.net.ipv4.tcp_tw_reuse"
+  value: "1"
+  tuning_action: "set"
+  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+- key: "sysctl.net.ipv4.tcp_tw_recycle"
+  value: "0"
+  tuning_action: "set"
+  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+
+# SSHD Advanced Tuning Parameters
+# https://www.ibm.com/support/pages/how-tune-ssh-daemon-security-settings-ibm-security-access-manager-ibm-security-verify-access-appliance
+- key: "sshd.ciphers"
+  value: "aes256-ctr,aes192-ctr,aes128-ctr"
+  tuning_action: "set"
+- key: "sshd.macs"
+  value: "hmac-sha2-512,hmac-sha2-256"
+  tuning_action: "set"
+- key: "sshd.KexAlgorithms"
+  value: "ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+  tuning_action: "set"
+
+# Security Enhancements
+- key: "lmi.security.tlsv10"
+  value: "false"
+  tuning_action: "set"
+- key: "lmi.security.tlsv11"
+  value: "false"
+  tuning_action: "set"
+- key: "wga_rte.embedded.ldap.ciphersuite"
+  value: "ECDHE-RSA-AES256-GCM-SHA384"
+  tuning_action: "set"
+  comment: "https://www.ibm.com/support/pages/node/886395"
+
+# ISVA 10
+- key: "lmi.ssl.ciphers"
+  value: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+  tuning_action: "set"
+  comment: "https://www.ibm.com/support/pages/how-configure-any-cipher-suite-lmi-listen-port-443"
+- key: "sys.direct.update.allowed"
+  value: "true"
+  tuning_action: "set"
+  comment: "Disables check for more recent version allowing any firmware to uploaded to LMI"
+- key: "fs.file-max"
+  value: "3261180"
+  tuning_action: "set"
+- key: "runtime.dbLoggingEnabled"
+  value: "false" # can be true in non-Production, but not Performance
+  tuning_action: "set"
+  comment: "https://github.com/IBM-Security/isam-support/blob/master/tuning/ISAM_Tuning.xlsx"
+- key: "runtime_profile.liberty_option.httpOptions.maxKeepAliveRequests"
+  value: "200"
+  tuning_action: "set"
+  comment: "https://github.com/IBM-Security/isam-support/blob/master/tuning/ISAM_Tuning.xlsx"
