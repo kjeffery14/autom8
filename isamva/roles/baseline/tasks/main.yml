@@ -6,6 +6,8 @@
 - name: Enable FIPS, Accept SLA, Complete Setup
   ansible.builtin.include_role:
     name: ibm.isam.base.first_steps
+  vars:
+    FIPS_cfg: "{{ isamva_fips_cfg }}"
   
 # - name: Change Admin Password if necessary
 #   include_tasks: change_password.yml
