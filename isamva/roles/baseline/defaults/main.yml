@@ -15,9 +15,9 @@ isamva_old_password: admin
 # Common Advanced Tuning Paramaters
 isamva_advanced_tuning_parameters:
 - key: sysctl.net.ipv4.ip_local_port_range
-  value: "{{ ip_local_port_range | default('16384 61000') }}"
+  value: "{{ ip_local_port_range | default('16384 65535') }}"
   tuning_action: set
-  comment: https://www-01.ibm.com/support/docview.wss?uid=swg21960611
+  comment: https://www.ibm.com/support/pages/ibm-security-access-manager-appliance-available-tcp-tunings
 - key: nist.sp800-131a.strict
   value: "true"
   tuning_action: set
@@ -25,15 +25,15 @@ isamva_advanced_tuning_parameters:
 - key: "sysctl.net.ipv4.tcp_fin_timeout"
   value: "30"
   tuning_action: "set"
-  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+  comment: https://www.ibm.com/support/pages/ibm-security-access-manager-appliance-available-tcp-tunings
 - key: "sysctl.net.ipv4.tcp_tw_reuse"
   value: "1"
   tuning_action: "set"
-  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+  comment: https://www.ibm.com/support/pages/ibm-security-access-manager-appliance-available-tcp-tunings
 - key: "sysctl.net.ipv4.tcp_tw_recycle"
   value: "0"
   tuning_action: "set"
-  comment: "https://www-01.ibm.com/support/docview.wss?uid=swg21960611"
+  comment: https://www.ibm.com/support/pages/ibm-security-access-manager-appliance-available-tcp-tunings
 
 # SSHD Advanced Tuning Parameters
 # https://www.ibm.com/support/pages/how-tune-ssh-daemon-security-settings-ibm-security-access-manager-ibm-security-verify-access-appliance
