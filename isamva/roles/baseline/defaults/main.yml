@@ -1,9 +1,9 @@
 ---
 # isamva/roles/defaults/main.yml
-# @version v2025.2.16
+# @version v2025.2.17
 # @author Kevin Jeffery
 
-isamva_fips_cfg: 
+FIPS_cfg: 
   fipsEnabled: true
   tlsv10Enabled: false
   tlsv11Enabled: false

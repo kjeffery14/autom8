@@ -1,34 +1,14 @@
 ---
 # isamva/roles/baseline/main.yml.yml
-# @version v2025.2.16
+# @version v2025.2.17
 # @author Kevin Jeffery
 
-- name: Check ISAM appliance for First Steps Execution
-  ansible.builtin.uri:
-    url: "https://{{ ansible_host }}/lmi"
-    user: admin
-    password: admin
-    method: GET
-    return_content: yes
-    force_basic_auth: yes
-    status_code: 200, 403
-    validate_certs: false
-    headers:
-     "Accept": "application/json"
-  check_mode: no
-  register: ret_firststeps
-
-- name: Basic Setup
-  ansible.builtin.include_tasks: firststeps.yml
-  when:
-    - ret_firststeps.status == 200
-    - ret_firststeps.json.sla is defined
-
-- name: Change Admin Password if necessary
-  include_tasks: change_password.yml
-  when:
-    - ret_firststeps.status == 200
-    - ret_firststeps.json.sla is not defined
+- name: Enable FIPS, Accept SLA, Complete Setup
+  ansible.builtin.include_role:
+    name: ibm.isam.base.first_steps
+  
+# - name: Change Admin Password if necessary
+#   include_tasks: change_password.yml
 
 # - name: Baseline Network Configuration
 #   include_role:
