@@ -68,12 +68,13 @@
 - name: Activate Modules
   ansible.builtin.include_role:
     name: ibm.isam.base.activate_modules
-  loop: "{{ activation_keys }}"
+  loop: "{{ isamva_activation_keys }}"
   vars:
-    activation_keys: "{{ item }}"
+    activation_keys:
+    - "{{ item }}"
   loop_control:
     label: "{{ item.id }}"
-  when: activation_keys is defined
+  when: isamva_activation_keys is defined
 
 - name: Update Management Certificate
   ansible.builtin.include_role:
