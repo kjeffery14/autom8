@@ -82,7 +82,7 @@
 
 - name: Advanced Tuning Parameters
   ansible.builtin.include_role:
-    name: ibm.isma.base.configure_advanced_tuning_parameters
+    name: ibm.isam.base.configure_advanced_tuning_parameters
   vars:
     advanced_tuning_parameters: "{{ isamva_advanced_tuning_parameters }}"
 
