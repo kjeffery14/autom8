@@ -38,12 +38,14 @@
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_interfaces
 
-# - name: Baseline Network Configuration
-#   include_role:
-#     name: isam_config/baseline_network
 # - name: Set Applicance Hostname
 # - name: DNS Configuration
-# - name: NTP Configuration
+- name: Time Configuration
+  ansible.builtin.include_role:
+    name: ibm.isam.base.configure_time
+  vars:
+    time_cfg: "{{ isamva_time_cfg }}"
+  when: isamva_time_cfg is defined
 # - name: Set Host Records
 #   when: isamva_host_records is defined
 
