@@ -59,9 +59,12 @@
     time_cfg: "{{ isamva_time_cfg }}"
   when: isamva_time_cfg is defined
 
-# - name: Set Host Records
-#   when: isamva_host_records is defined
-
+- name: Set Host Records
+  ansible.builtin.include_role:
+    name: ibm.isam.base.set_host_records
+  vars:
+    host_records: "{{ isamva_host_records }}"
+  when: isamva_host_records is defined
 
 - meta: flush_handlers
 
