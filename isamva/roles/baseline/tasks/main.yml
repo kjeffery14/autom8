@@ -39,7 +39,13 @@
     name: ibm.isam.base.configure_interfaces
 
 # - name: Set Applicance Hostname
-# - name: DNS Configuration
+- name: DNS Configuration
+  ansible.builtin.include_role:
+    name: ibm.isam.base.configure_dns
+  vars:
+    dns: "{{ isamva_dns }}"
+  when: isamva_dns is defined
+
 - name: Time Configuration
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_time
