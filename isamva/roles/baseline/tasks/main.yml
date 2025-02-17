@@ -68,22 +68,17 @@
 - name: Activate Modules
   ansible.builtin.include_role:
     name: ibm.isam.base.activate_modules
-  # vars:
-  #   activation_keys: "{{ isamva_activation_keys }}"
-  # when: isamva_activation_keys is defined
+  when: activation_keys is defined
 
-# - meta: flush_handlers
+- name: Update Management Certificate
+  ansible.builtin.include_role:
+    name: ibm.isam.base.set_management_ssl_certificate
+  vars:
+    update_management_ssl_cert_cert: "{{ isamva_lmi_cert_item.name }}"
+    update_management_ssl_cert_pwd: "{{ isamva_lmi_cert_item.pwd }}"
+  when: isamva_lmi_cert_item is defined
 
-# - name: Update Management Certificate
-#   include_role:
-#     name: isam_config/management_ssl_certificate
-#   vars:
-#     ssl_cert_cert: "../files/personal_certs/{{ lmi_cert_file.name }}"
-#     ssl_cert_pwd: "{{ lmi_cert_file.pwd }}"
-#     ssl_cert_notafter: "{{ lmi_cert_file.notafter | default('') }}"
-#   when: lmi_cert_file is defined
-
-# - meta: flush_handlers
+- meta: flush_handlers
 
 # - name: Common Advanced Tuning Parameters
 #   include_role:
