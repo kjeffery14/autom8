@@ -115,15 +115,15 @@
     isamapi:
       httpsPort: "{{ isamva_httpsPort | default(omit) }}"
       minHeapSize: "{{ isamva_minHeapSize }}"
-      maxHeapSize: "{{ isamva_maxHeapSize }}"
-      acceptClientCerts: "{{ isamva_acceptClientCerts | default('false') }}"
-      enabledTLS:
-      - TLSv1.2
-      enabledServerProtocols: TLSv1.2
-      enableSSLv3: "{{ false if isam_version is version('10.0.3', 'lt') else omit }}"
-      loginMessage: "{{ isamva_loginMessage }}"
-      loginHeader: "{{ isamva_environment | default('') }} {{ description | default(host_name) }}"
-      pendingChangesLifetime: "{{ isamva_pendingChangesLifetime | default('24') }}"
+      # maxHeapSize: "{{ isamva_maxHeapSize }}"
+      # acceptClientCerts: "{{ isamva_acceptClientCerts | default('false') }}"
+      # enabledTLS:
+      # - TLSv1.2
+      # enabledServerProtocols: TLSv1.2
+      # enableSSLv3: "{{ false if isam_version is version('10.0.3', 'lt') else omit }}"
+      # loginMessage: "{{ isamva_loginMessage }}"
+      # loginHeader: "{{ isamva_environment | default('') }} {{ description | default(host_name) }}"
+      # pendingChangesLifetime: "{{ isamva_pendingChangesLifetime | default('24') }}"
   notify: Commit Changes and Restart
 
 - meta: flush_handlers
