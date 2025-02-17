@@ -58,22 +58,19 @@
   vars:
     time_cfg: "{{ isamva_time_cfg }}"
   when: isamva_time_cfg is defined
+
 # - name: Set Host Records
 #   when: isamva_host_records is defined
 
 
-# - meta: flush_handlers
+- meta: flush_handlers
 
-# - name: Activate Modules
-#   include_role:
-#     name: isam_config/activate_modules
-#     apply:
-#       tags:
-#         - baseline
-#         - activation
-#   vars:
-#     activation_keys: "{{ isamva_activation_keys }}"
-#   when: isamva_activation_keys is defined
+- name: Activate Modules
+  ansible.builtin.include_role:
+    name: ibm.isam.base.activate_modules
+  # vars:
+  #   activation_keys: "{{ isamva_activation_keys }}"
+  # when: isamva_activation_keys is defined
 
 # - meta: flush_handlers
 
