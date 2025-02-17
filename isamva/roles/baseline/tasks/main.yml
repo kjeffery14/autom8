@@ -85,6 +85,7 @@
     name: ibm.isam.base.configure_advanced_tuning_parameters
   vars:
     advanced_tuning_parameters: "{{ isamva_advanced_tuning_parameters }}"
+    ansible_command_timeout: 120
 
 # - name: SSHD Advanced Tuning Parameters
 #   include_role:
