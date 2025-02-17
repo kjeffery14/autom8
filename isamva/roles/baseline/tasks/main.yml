@@ -125,39 +125,7 @@
 
 - meta: flush_handlers
 
-# - name: Import Common Keystores
-#   include_role:
-#     name: isam_config/import_keystores
-#   vars:
-#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
-#     kdb_items: "{{ isamva_keystores }}"
-#   when: isamva_keystores is defined and isamva_keystores | length > 0
-
-# - name: Import CWGA Keystores
-#   include_role:
-#     name: isam_config/import_keystores
-#   vars:
-#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
-#     kdb_items: "{{ cwga_keystores }}"
-#   when: cwga_keystores is defined and cwga_keystores | length > 0
-
-# - name: Import EWGA Keystores
-#   include_role:
-#     name: isam_config/import_keystores
-#   vars:
-#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
-#     kdb_items: "{{ ewga_keystores }}"
-#   when: ewga_keystores is defined and ewga_keystores | length > 0
-
-# - name: Import MGA Keystores
-#   include_role:
-#     name: isam_config/import_keystores
-#   vars:
-#     expired_certificates: "{{ isamva_expired_certificates | default([]) }}"
-#     kdb_items: "{{ mga_keystores }}"
-#   when: mga_keystores is defined and mga_keystores | length > 0
-
-# - name: Import RTSS Signer Certificates
+# - name: Import Signer Certificates
 #   include_role:
 #     name: isam_config/import_signer_certificates
 #   vars:
@@ -167,11 +135,6 @@
 #     signer_certificates: "{{ isamva_signer_certificates }}"
 #     expired_certificates:
 #       - label: "CN=*.ice.ibmcloud.com,O=International Business Machines Corporation,L=Armonk,ST=New York,C=US"
-
-# - name: Configure MSAD Authentication
-#   include_role:
-#     name: isam_config/enable_msad_authentication
-#   when: msad_auth_admin is defined and msad_auth_bind_password is defined and msad_auth_bind_password != ''
 
 # - meta: flush_handlers
 
