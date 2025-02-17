@@ -34,11 +34,19 @@
     - result is defined
     - result.status == 200
 
-#   include_tasks: change_password.yml
+- name: Configure Interfaces
+  ansible.builtin.include_role:
+    name: ibm.isam.base.configure_interfaces
 
 # - name: Baseline Network Configuration
 #   include_role:
 #     name: isam_config/baseline_network
+# - name: Set Applicance Hostname
+# - name: DNS Configuration
+# - name: NTP Configuration
+# - name: Set Host Records
+#   when: isamva_host_records is defined
+
 
 # - meta: flush_handlers
 
