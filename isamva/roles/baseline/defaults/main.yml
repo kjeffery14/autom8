@@ -7,3 +7,4 @@ isamva_fips_cfg:
   fipsEnabled: true
   tlsv10Enabled: false
   tlsv11Enabled: false
+isamva_old_password: admin

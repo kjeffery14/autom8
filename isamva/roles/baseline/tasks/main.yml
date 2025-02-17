@@ -9,7 +9,31 @@
   vars:
     FIPS_cfg: "{{ isamva_fips_cfg }}"
   
-# - name: Change Admin Password if necessary
+- name: Check Admin Password
+  ansible.builtin.uri:
+    url: https://{{ ansible_host | default(inventory_hostname) }}:{{ ansible_isam_port }}/lmi
+    user: "{{ ansible_isam_username }}"
+    password: "{{ isamva_old_password }}"
+    method: GET
+    return_content: true
+    force_basic_auth: true
+    status_code: 200, 403
+    validate_certs: false
+    headers:
+      Accept: application/json
+  check_mode: false
+  register: result
+
+- name: Change Admin Password if necessary
+  ansible.builtin.include_role:
+    name: ibm.isam.base.change_admin_password
+  vars:
+    old_password: "{{ isamva_old_password }}"
+    new_password: "{{ ansible_isam_password }}"
+  when:
+    - result is defined
+    - result.status == 200
+
 #   include_tasks: change_password.yml
 
 # - name: Baseline Network Configuration
