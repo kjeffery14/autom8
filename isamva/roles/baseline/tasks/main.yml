@@ -71,9 +71,10 @@
   loop: "{{ isamva_activation_keys }}"
   vars:
     activation_keys:
-    - "{{ item }}"
+    - "{{ key_item }}"
   loop_control:
-    label: "{{ item.id }}"
+    label: "{{ key_item.id }}"
+    loop_var: key_item
   when: isamva_activation_keys is defined
 
 - name: Update Management Certificate
