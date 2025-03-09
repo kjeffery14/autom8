@@ -5,8 +5,7 @@
 #
 
 # The following can be overridden with group or host variables
-javasdk_archive: "{{ javasdk_info[javasdk_info]['archive'] }}"
-javasdk_home: "{{ javasdk_target_dir }}/{{ javasdk_info[javasdk_version]['creates'] | default('java') }}"
+javasdk_platform: LinuxX64
 javasdk_source_dir: /tmp
 javasdk_target_dir: /tmp
 javasdk_version: 17.0.11.0
