@@ -1,6 +1,6 @@
 ---
 # middleware/roles/javasdk/tasks/main.yml
-# @version 2025.3.9.0
+# @version 2025.3.9.1
 # Java SDK Package for DB2 and ISDS
 
 - name: Get JavaSDK version
@@ -22,7 +22,7 @@
 
 - name: Decompressing Java SDK Package
   unarchive:
-    src: "{{ javasdk_source_dir }}/{{ ret_javasdk.archive }}"
+    src: "{{ javasdk_source_dir }}/{{ ret_javasdk.data.archive }}"
     dest: "{{ javasdk_target_dir }}"
     remote_src: yes
     creates: "{{ javasdk_home }}"
