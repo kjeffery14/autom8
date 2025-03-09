@@ -11,12 +11,20 @@ from sys import version_info
 class gsk8version:
   def __init__(self, module):
     self.module = module
-    self.executable = '/usr/bin/gsk8capicmd_64'
     self.module.debug("*** Process all Arguments")
     self.installed        = os.path.exists(self.executable)
+    self.platform         = self.module.params['platform']
+    if self.platform == 'LinuxX86':
+      self.executable = '/usr/bin/gsk8capicmd_64'
+    self.version          = self.module.params['version']
+    if self.version is not None:
+      components = self.version.split('.')
+      if len(components) == 4:
+        self.name = '{0}-ISS-GSKIT-{1}-FP00{2}'.format(self.version, self.platform, components[3])
 
-  def version(self):
-    data = dict(version='none', installed=self.installed)
+  def get_version(self):
+    data = dict(version='0.0.0.0', installed=self.installed)
+    warnings = []
     if self.installed:
       stdout = self._run_command(['-version'])[1]
       for line in stdout.split('\n'):
@@ -36,7 +44,19 @@ class gsk8version:
           continue
         if line.startswith('ProductName'):
           data['build'] = parts[1].strip()
-    self.module.exit_json(changed=False, data=data)
+    if self.version is not None:
+      data['name'] = self.name
+      data['archive'] = '{0}.tar.gz'.format(self.name)
+      if self.platform == 'LinuxX64':
+        data['packages'] = [
+          "32/gskcrypt32-{0}.linux.x86.rpm".format(self.version),
+          "32/gskssl32-{0}.linux.x86.rpm".format(self.version),
+          "64/gskcrypt64-{0}.linux.x86_64.rpm".format(self.version),
+          "64/gskssl64-{0}.linux.x86_64.rpm".format(self.version)
+        ]
+      else:
+        warnings.append('version does not have four components')
+    self.module.exit_json(changed=False, data=data, warnings=warnings)
   
   def _run_command(self, params):
     param_string = ' '.join(params)
@@ -50,6 +70,8 @@ def main():
   module = AnsibleModule(
     argument_spec=dict(
       log=dict(required=False, type='str', default='INFO', choices=['DEBUG', 'INFO', 'ERROR', 'CRITICAL']),
+      platform=dict(required=False, type='str', default='LinuxX64', choices=['LinuxX64']),
+      version=dict(required=False, type='str')
     ),
     supports_check_mode=False
   )
@@ -59,7 +81,7 @@ def main():
     module.fail_json(changed=False, msg='Python3 is required on executing host')
 
   inst = gsk8version(module)
-  inst.version()
+  inst.get_version()
 
 if __name__ == '__main__':
     main()
