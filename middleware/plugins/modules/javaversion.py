@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # middleware/plugins/modules/javaversion.py
-# @version v2025.2.15.0
+# @version v2025.3.9.0
 # @author Kevin Jeffery
 
 from ansible.module_utils.basic import AnsibleModule # type: ignore[import]
@@ -11,10 +11,20 @@ class javaversion:
     self.module = module
     self.module.debug("*** Process all Arguments")
     self.java_home  = self.module.params['java_home']
-    self.executable = '{java_home}/bin/java'.format(java_home=self.java_home)
+    self.platform   = self.module.params['platform']
+    self.version    = self.module.params['version']
+    if self.version is not None:
+      components = self.version.split('.')
+      if len(components) == 4:
+        self.archive = '{0}-ISS-JAVA-{1}-FP00{2}.tar'.format(self.version, self.platform, components[3])
+      else:
+        self.archive = None
+    if self.platform == 'LinuxX86':
+      self.executable = '{java_home}/bin/java'.format(java_home=self.java_home)
   
-  def version(self):
-    data = dict(version='none', installed=False)
+  def get_version(self):
+    data = dict(version='0.0.0.0', installed=False)
+    warnings = []
     if os.path.exists(self.executable):
       data['installed'] = True
       stderr = self._run_command('-version')[2]
@@ -32,7 +42,12 @@ class javaversion:
           continue
         if line.startswith('Java HotSpot'):
           data['hotspot'] = line
-    self.module.exit_json(changed=False, data=data)
+    if self.version is not None:
+      if self.archive is None:
+        warnings.append('version does not have four components')
+      else:
+        data['archive'] = self.archive
+    self.module.exit_json(changed=False, data=data, warnings=warnings)
   
   def _run_command(self, params):
     cmd = '{0} {1}'.format(self.executable, params)
@@ -44,12 +59,14 @@ class javaversion:
 def main():
   module = AnsibleModule(
     argument_spec=dict(
-      java_home=dict(required=True, type='str')
+      java_home=dict(required=True, type='str'),
+      platform=dict(required=False, type='str', default='LinuxX64', choices=['LinuxX64']),
+      version=dict(required=False, type='str')
     ),
     supports_check_mode=False
   )
   inst = javaversion(module)
-  inst.version()
+  inst.get_version()
 
 if __name__ == '__main__':
     main()
