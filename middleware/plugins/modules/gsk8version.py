@@ -21,6 +21,8 @@ class gsk8version:
       components = self.version.split('.')
       if len(components) == 4:
         self.name = '{0}-ISS-GSKIT-{1}-FP00{2}'.format(self.version, self.platform, components[3])
+      else:
+        self.name = None
 
   def get_version(self):
     data = dict(version='0.0.0.0', installed=self.installed)
@@ -45,17 +47,18 @@ class gsk8version:
         if line.startswith('ProductName'):
           data['build'] = parts[1].strip()
     if self.version is not None:
-      data['name'] = self.name
-      data['archive'] = '{0}.tar.gz'.format(self.name)
-      if self.platform == 'LinuxX64':
-        data['packages'] = [
-          "32/gskcrypt32-{0}.linux.x86.rpm".format(self.version),
-          "32/gskssl32-{0}.linux.x86.rpm".format(self.version),
-          "64/gskcrypt64-{0}.linux.x86_64.rpm".format(self.version),
-          "64/gskssl64-{0}.linux.x86_64.rpm".format(self.version)
-        ]
-      else:
+      if self.name is None:
         warnings.append('version does not have four components')
+      else:
+        data['name'] = self.name
+        data['archive'] = '{0}.tar.gz'.format(self.name)
+        if self.platform == 'LinuxX64':
+          data['packages'] = [
+            "32/gskcrypt32-{0}.linux.x86.rpm".format(self.version),
+            "32/gskssl32-{0}.linux.x86.rpm".format(self.version),
+            "64/gskcrypt64-{0}.linux.x86_64.rpm".format(self.version),
+            "64/gskssl64-{0}.linux.x86_64.rpm".format(self.version)
+          ]
     self.module.exit_json(changed=False, data=data, warnings=warnings)
   
   def _run_command(self, params):
