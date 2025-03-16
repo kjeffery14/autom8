@@ -10,6 +10,11 @@
   register: ret_gsk8version
   tags: always
 
+- name: GSKit Info
+  debug:
+    var: ret_gsk8version.data
+  tags: always
+
 - name: Decompressing GSKit Package
   ansible.builtin.unarchive:
     creates: "{{ gskit_source_dir }}/{{ ret_gsk8version.data.name }}"
