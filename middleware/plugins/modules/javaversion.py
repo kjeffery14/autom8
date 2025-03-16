@@ -47,7 +47,7 @@ class javaversion:
         warnings.append('version does not have four components')
       else:
         data['archive'] = self.archive
-        if self.installed and data['version'] is not None:
+        if data['installed'] and data['version'] is not None:
           want_version = self.version.split('.')
           have_version = data['version'].split('.')
           for i in range(4):
