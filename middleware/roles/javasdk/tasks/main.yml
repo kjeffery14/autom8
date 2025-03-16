@@ -17,7 +17,7 @@
     state: absent
   when:
     - ret_javasdk.data.installed | bool
-    - ret_javasdk.data.version | version(javasdk_version, 'lt')
+    - ret_javasdk.data.upgrade | bool
   tags: always
 
 - name: Decompressing Java SDK Package

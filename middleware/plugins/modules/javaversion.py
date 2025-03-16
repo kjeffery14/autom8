@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # middleware/plugins/modules/javaversion.py
-# @version v2025.3.9.0
+# @version v2025.3.16.0
 # @author Kevin Jeffery
 
 from ansible.module_utils.basic import AnsibleModule # type: ignore[import]
@@ -23,7 +23,7 @@ class javaversion:
       self.executable = '{java_home}/bin/java'.format(java_home=self.java_home)
   
   def get_version(self):
-    data = dict(version='0.0.0.0', installed=False)
+    data = dict(version='0.0.0.0', installed=False, upgrade=False)
     warnings = []
     if os.path.exists(self.executable):
       data['installed'] = True
@@ -47,6 +47,14 @@ class javaversion:
         warnings.append('version does not have four components')
       else:
         data['archive'] = self.archive
+        if self.installed and data['version'] is not None:
+          want_version = self.version.split('.')
+          have_version = data['version'].split('.')
+          for i in range(4):
+            if int(have_version[i]) < int(want_version[i]):
+              warnings.append('installed version is less than requested version')
+              data['upgrade'] = True
+              break
     self.module.exit_json(changed=False, data=data, warnings=warnings)
   
   def _run_command(self, params):
