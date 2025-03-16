@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # middleware/plugins/modules/gsk8version.py
-# @version v2025.3.9.0
+# @version v2025.3.16.0
 # @author Kevin Jeffery
 
 from ansible.module_utils.basic import AnsibleModule # type: ignore[import]
@@ -14,7 +14,7 @@ class gsk8version:
     self.module.debug("*** Process all Arguments")
     self.installed        = os.path.exists(self.executable)
     self.platform         = self.module.params['platform']
-    if self.platform == 'LinuxX86':
+    if self.platform == 'LinuxX64':
       self.executable = '/usr/bin/gsk8capicmd_64'
     self.version          = self.module.params['version']
     if self.version is not None:
