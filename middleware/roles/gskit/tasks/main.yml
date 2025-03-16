@@ -32,5 +32,5 @@
   loop_control:
     label: "{{ item }}"
   become: true
-  when: ret_gsk8version.data.version | ansible.builtin.version(gskit_version, 'lt')
+  when: not ret_gsk8version.data.installed or ret_gsk8version.data.upgrade
   tags: always

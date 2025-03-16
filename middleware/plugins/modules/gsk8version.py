@@ -28,7 +28,7 @@ class gsk8version:
         self.name = None
 
   def get_version(self):
-    data = dict(version='0.0.0.0', installed=self.installed)
+    data = dict(version='0.0.0.0', installed=self.installed, upgrade=False)
     warnings = []
     if self.installed:
       stdout = self._run_command(['-version'])[1]
@@ -62,6 +62,14 @@ class gsk8version:
             "64/gskcrypt64-{0}.linux.x86_64.rpm".format(self.version),
             "64/gskssl64-{0}.linux.x86_64.rpm".format(self.version)
           ]
+        if self.installed and data['version'] is not None:
+          want_version = self.version.split('.')
+          have_version = data['version'].split('.')
+          for i in range(4):
+            if int(have_version[i]) < int(want_version[i]):
+              warnings.append('installed version is less than requested version')
+              data['upgrade'] = True
+              break
     self.module.exit_json(changed=False, data=data, warnings=warnings)
   
   def _run_command(self, params):
