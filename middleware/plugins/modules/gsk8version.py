@@ -14,6 +14,7 @@ class gsk8version:
     self.module = module
     self.module.debug("*** Process all Arguments")
     self.installed        = False
+    self.path             = self.module.params['path']
     self.platform         = self.module.params['platform']
     if self.platform == 'LinuxX64':
       self.executable = '/usr/bin/gsk8capicmd_64'
@@ -55,12 +56,16 @@ class gsk8version:
       else:
         data['name'] = self.name
         data['archive'] = '{0}.tar.gz'.format(self.name)
+        if self.path is not None:
+          path = '{0}/{1}/'.foramt(self.name, self.path)
+        else:
+          path = ''
         if self.platform == 'LinuxX64':
           data['packages'] = [
-            "32/gskcrypt32-{0}.linux.x86.rpm".format(self.version),
-            "32/gskssl32-{0}.linux.x86.rpm".format(self.version),
-            "64/gskcrypt64-{0}.linux.x86_64.rpm".format(self.version),
-            "64/gskssl64-{0}.linux.x86_64.rpm".format(self.version)
+            "{0}32/gskcrypt32-{1}.linux.x86.rpm".format(path, self.version),
+            "{0}32/gskssl32-{1}.linux.x86.rpm".format(path, self.version),
+            "{0}64/gskcrypt64-{1}.linux.x86_64.rpm".format(path, self.version),
+            "{0}64/gskssl64-{1}.linux.x86_64.rpm".format(path, self.version)
           ]
         if self.installed and data['version'] is not None:
           want_version = self.version.split('.')
@@ -84,6 +89,7 @@ def main():
   module = AnsibleModule(
     argument_spec=dict(
       log=dict(required=False, type='str', default='INFO', choices=['DEBUG', 'INFO', 'ERROR', 'CRITICAL']),
+      path=dict(required=False, type='str'),
       platform=dict(required=False, type='str', default='LinuxX64', choices=['LinuxX64']),
       version=dict(required=False, type='str')
     ),

@@ -7,6 +7,7 @@
   autom8.middleware.gsk8version:
     platform: "{{ gskit_platform }}"
     version: "{{ gskit_version }}"
+    path: "{{ gskit_source_dir }}"
   register: ret_gsk8version
   tags: always
 
@@ -26,11 +27,13 @@
   tags: always
 
 - name: Install packages
-  package:
-    name: "{{ gskit_source_dir }}/{{ ret_gsk8version.data.name }}/{{ item }}"
-  loop: "{{ ret_gsk8version.data.packages }}"
-  loop_control:
-    label: "{{ item }}"
+  ansible.builtin.dnf:
+    disable_gpg_check: yes
+    name: "{{ ret_gsk8version.data.packages }}"
+    # name: "{{ gskit_source_dir }}/{{ ret_gsk8version.data.name }}/{{ item }}"
+  # loop: "{{ ret_gsk8version.data.packages }}"
+  # loop_control:
+  #   label: "{{ item }}"
   become: true
   when: not ret_gsk8version.data.installed or ret_gsk8version.data.upgrade
   tags: always
