@@ -14,6 +14,7 @@
 - name: GSKit Info
   debug:
     var: ret_gsk8version.data
+    verbosity: 2
   tags: always
 
 - name: Decompressing GSKit Package
