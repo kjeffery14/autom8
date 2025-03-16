@@ -10,12 +10,15 @@ from sys import version_info
 
 class gsk8version:
   def __init__(self, module):
+    self.executable = None
     self.module = module
     self.module.debug("*** Process all Arguments")
-    self.installed        = os.path.exists(self.executable)
+    self.installed        = False
     self.platform         = self.module.params['platform']
     if self.platform == 'LinuxX64':
       self.executable = '/usr/bin/gsk8capicmd_64'
+    if self.executable is not None and os.path.exists(self.executable):
+      self.installed = True
     self.version          = self.module.params['version']
     if self.version is not None:
       components = self.version.split('.')
