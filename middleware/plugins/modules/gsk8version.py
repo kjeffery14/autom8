@@ -57,7 +57,7 @@ class gsk8version:
         data['name'] = self.name
         data['archive'] = '{0}.tar.gz'.format(self.name)
         if self.path is not None:
-          path = '{0}/{1}/'.foramt(self.name, self.path)
+          path = '{0}/{1}/'.format(self.name, self.path)
         else:
           path = ''
         if self.platform == 'LinuxX64':
