@@ -19,13 +19,13 @@ class javaversion:
         self.archive = '{0}-ISS-JAVA-{1}-FP00{2}.tar'.format(self.version, self.platform, components[3])
       else:
         self.archive = None
-    if self.platform == 'LinuxX86':
+    if self.platform == 'LinuxX64':
       self.executable = '{java_home}/bin/java'.format(java_home=self.java_home)
   
   def get_version(self):
     data = dict(version='0.0.0.0', installed=False, upgrade=False)
     warnings = []
-    if os.path.exists(self.executable):
+    if self.executable is not None and os.path.exists(self.executable):
       data['installed'] = True
       stderr = self._run_command('-version')[2]
       stderr_lines = stderr.split('\n')
