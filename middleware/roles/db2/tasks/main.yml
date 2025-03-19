@@ -7,6 +7,7 @@
   autom8.middleware.db2license:
     action: version
     db2_home: "{{ db2_home }}"
+  become: yes
   register: ret_db2_version
   tags: always
 
@@ -21,6 +22,7 @@
     db2_home: "{{ db2_home }}"
     id: "{{ db2_info.edition }}"
     path: "{{ db2_source_dir}}/{{ db2_info.license_file }}"
+  become: yes
   tags: always
 
 - name: Add High Capacity Feature
@@ -30,6 +32,7 @@
     id: "{{ db2_info.edition }}"
     feature: high_capacity
     path: "{{ db2_source_dir}}/{{ db2_info.highcapacity_file }}"
+  become: yes
   when: db2_info.highcapacity_file is defined
   tags: always
 
