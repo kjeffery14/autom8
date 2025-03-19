@@ -7,6 +7,7 @@ from ansible.module_utils.basic import AnsibleModule # type: ignore[import]
 import os
 
 actions = ['add_feature', 'add_license', 'get', 'get_all', 'remove_license', 'version']
+db2_license_ids = ['db2dec', 'db2std', 'db2ese']
 components = [
   dict(key='name', startswith='Product name'),
   dict(key='type', startswith='License type'),
@@ -140,7 +141,7 @@ def main():
       action = dict(required=True, type='str', choices=actions),
       db2_home = dict(required=True, type='str'),
       feature = dict(required=False, type='str', choices=['high_capacity', 'performance_management']),
-      id = dict(required=False, type='str'),
+      id = dict(required=False, type='str', choices=db2_license_ids),
       path = dict(required=False, type='str')
     ),
     required_if = [
