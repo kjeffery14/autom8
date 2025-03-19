@@ -39,17 +39,17 @@
   loop:
     - archive: "{{ db2_info.archive }}"
       creates: "{{ db2_info.creates }}"
-    - archive: "{{ db2_info.db2_license_archive | default('') }}"
-      creates: "{{ db2_info.db2_license_file | default('') }}"
-    - archive: "{{ db2_info.db2_highcapacity_archive | default('') }}"
-      creates: "{{ db2_info.db2_highcapacity_file | default('') }}"
+    - archive: "{{ db2_info.license_archive | default('') }}"
+      creates: "{{ db2_info.license_file | default('') }}"
+    - archive: "{{ db2_info.highcapacity_archive | default('') }}"
+      creates: "{{ db2_info.highcapacity_file | default('') }}"
   loop_control:
     label: "{{ item.archive }}"
   when: item.archive is defined
   tags: always
 
 - name: Run DB2 Pre-Requisite Check
-  ansible.builtin.command: "{{ software_dest_dir }}/{{ db2_info.creates }}/db2prereqcheck -i -s"
+  ansible.builtin.command: "{{ db2_source_dir }}/{{ db2_info.creates }}/db2prereqcheck -i -s"
   register: precheck
   failed_when:
   - "'mksh' not in precheck.stderr" # Fix for https://www.ibm.com/support/pages/db2prereqcheck-returns-dbt3507e-due-missing-mksh-or-psmisc-packages
@@ -61,11 +61,11 @@
 - name: Template response file
   ansible.builtin.template: 
     src: db2server.rsp.j2
-    dest: "{{ software_dest_dir }}/db2server.rsp"
+    dest: "{{ db2_source_dir }}/db2server.rsp"
   tags: always
 
 - name: Installing DB2
-  ansible.builtin.command: "{{ software_dest_dir }}/{{ db2_info[db2_version][db2_edition].creates }}/db2setup -f sysreq -r {{ software_dest_dir }}/db2server.rsp"
+  ansible.builtin.command: "{{ db2_source_dir }}/{{ db2_info.creates }}/db2setup -f sysreq -r {{ db2_source_dir }}/db2server.rsp"
   register: db2_setup
   args: 
     creates: "{{ db2_home }}"
