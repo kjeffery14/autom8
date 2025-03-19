@@ -10,10 +10,16 @@
   become: yes
   tags: always
 
-- name: Disable SELinux
-  ansible.builtin.include_role:
-    name: autom8.middleware.prep_tasks
-    tasks_from: disable_selinux
+- name: Disabling SELinux
+  lineinfile:
+    path: /etc/selinux/config
+    line: SELINUX=disabled
+    regex: ^SELINUX=
+  become: yes 
+  notify: Reboot server
+  tags: always
+
+- meta: flush_handlers
   tags: always
 
 - name: Add entry to /etc/hosts
