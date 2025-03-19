@@ -35,6 +35,7 @@
     src: "{{ db2_source_dir }}/{{ item.archive }}"
     dest: "{{ db2_source_dir }}"
     creates: "{{ db2_source_dir }}/{{ item.creates }}"
+    remote_src: yes
   loop:
     - archive: "{{ db2_info.archive }}"
       creates: "{{ db2_info.creates }}"
