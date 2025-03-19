@@ -86,6 +86,7 @@
   autom8.middleware.db2license:
     action: version
     db2_home: "{{ db2_home }}"
+  become: yes
   register: ret_db2_version
   failed_when:  not ret_db2_version.data.installed
   tags: always
