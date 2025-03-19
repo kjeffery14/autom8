@@ -20,7 +20,7 @@
   autom8.middleware.db2license:
     action: add_license
     db2_home: "{{ db2_home }}"
-    id: "{{ db2_info.edition }}"
+    id: "{{ db2_info.license_name }}"
     path: "{{ db2_source_dir}}/{{ db2_info.license_file }}"
   become: yes
   tags: always
@@ -29,7 +29,7 @@
   autom8.middleware.db2license:
     action: add_feature
     db2_home: "{{ db2_home }}"
-    id: "{{ db2_info.license | default('db2std') }}"
+    id: "{{ db2_info.license_name }}"
     feature: high_capacity
     path: "{{ db2_source_dir}}/{{ db2_info.highcapacity_file }}"
   become: yes
