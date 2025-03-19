@@ -76,16 +76,11 @@
   tags: always
 
 - name: Validating the current installation
-  ansible.builtin.command: "{{ db2_home }}/install/db2ls"
-  register: db2_val
-  failed_when:  db2_home not in db2_val.stdout
-  changed_when: False
-  tags: always
-
-- name: Installation results
-  ansible.builtin.debug: 
-    var: db2_val.stdout_lines
-    verbosity: 3
+  autom8.middleware.db2license:
+    action: version
+    db2_home: "{{ db2_home }}"
+  register: ret_db2_version
+  failed_when:  not ret_db2_version.data.installed
   tags: always
 
 - name: Deploy DB2 Fault Monitor Coordinator Daemon Service file

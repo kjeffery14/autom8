@@ -12,7 +12,7 @@
 
 - name: Install DB2 Product
   include_tasks: install.yml
-  when: not ret_db2_version.installed
+  when: not ret_db2_version.data.installed
   tags: always
 
 - name: License DB2
