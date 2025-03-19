@@ -1,0 +1,98 @@
+---
+# middleware/roles/db2/tasks/main/install.yml
+# @version v1.03_2025-MAR-18
+# @author Kevin Jeffery
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name: "{{ db2_packages }}"
+    state: latest
+  become: yes
+  tags: always
+
+- name: Disable SELinux
+  ansible.builtin.include_role:
+    name: autom8.middleware.prep_tasks
+    tasks_from: disable_selinux
+  tags: always
+
+- name: Add entry to /etc/hosts
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ ip_address }}.*{{ host_name }}"
+    line: "{{ ip_address }} {{ host_name }} {{ host_name.split('.') | first }}"
+  become: yes
+  tags: always
+
+- name: Unarchive Software
+  ansible.builtin.unarchive:
+    src: "{{ db2_source_dir }}/{{ item.archive }}"
+    dest: "{{ db2_source_dir }}"
+    creates: "{{ db2_source_dir }}/{{ item.creates }}"
+  loop:
+    - archive: "{{ db2_info.archive }}"
+      creates: "{{ db2_info.creates }}"
+    - archive: "{{ db2_info.db2_license_archive | default('') }}"
+      creates: "{{ db2_info.db2_license_file | default('') }}"
+    - archive: "{{ db2_info.db2_highcapacity_archive | default('') }}"
+      creates: "{{ db2_info.db2_highcapacity_file | default('') }}"
+  loop_control:
+    label: "{{ item.archive }}"
+  when: item.archive is defined
+  tags: always
+
+- name: Run DB2 Pre-Requisite Check
+  ansible.builtin.command: "{{ software_dest_dir }}/{{ db2_info.creates }}/db2prereqcheck -i -s"
+  register: precheck
+  failed_when:
+  - "'mksh' not in precheck.stderr" # Fix for https://www.ibm.com/support/pages/db2prereqcheck-returns-dbt3507e-due-missing-mksh-or-psmisc-packages
+  - "'failed' in precheck.stderr"
+  changed_when: False
+  become: yes
+  tags: always
+
+- name: Template response file
+  ansible.builtin.template: 
+    src: db2server.rsp.j2
+    dest: "{{ software_dest_dir }}/db2server.rsp"
+  tags: always
+
+- name: Installing DB2
+  ansible.builtin.command: "{{ software_dest_dir }}/{{ db2_info[db2_version][db2_edition].creates }}/db2setup -f sysreq -r {{ software_dest_dir }}/db2server.rsp"
+  register: db2_setup
+  args: 
+    creates: "{{ db2_home }}"
+  become: yes
+  notify:
+  - Sync GSKit32
+  - Sync GSKit64
+  - Sync JavaSDK
+  - Reboot server
+  tags: always
+
+- name: Setup results
+  ansible.builtin.debug: 
+    var: db2_setup.stdout_lines
+  tags: always
+
+- name: Validating the current installation
+  ansible.builtin.command: "{{ db2_home }}/install/db2ls"
+  register: db2_val
+  failed_when:  db2_home not in db2_val.stdout
+  changed_when: False
+  tags: always
+
+- name: Installation results
+  ansible.builtin.debug: 
+    var: db2_val.stdout_lines
+    verbosity: 3
+  tags: always
+
+- name: Deploy DB2 Fault Monitor Coordinator Daemon Service file
+  ansible.builtin.template:
+    src: db2fmcd.service.j2
+    dest: /etc/systemd/system/db2fmcd.service
+    force: yes
+  become: yes
+  notify: Enable DB2 Service
+  tags: always

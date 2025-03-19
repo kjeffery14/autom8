@@ -1,0 +1,43 @@
+---
+# middleware/roles/db2/handlers/main.yml
+# @version v1.05_2025-MAR-18
+# @author Kevin Jeffery
+
+- name: Sync GSKit32
+  ansible.builtin.shell: "rsync --itemize-changes --archive {{ gskit_home }}/lib/ {{ db2_home }}/lib32/gskit_db2/"
+  # always run
+  check_mode: no
+  become: yes
+  register: rsync_result
+  changed_when: rsync_result.stdout != ''
+  tags: always
+
+- name: Sync GSKit64
+  ansible.builtin.shell: "rsync --itemize-changes --archive {{ gskit64_home }}/lib64/ {{ db2_home }}/lib64/gskit_db2/"
+  # always run
+  check_mode: no
+  become: yes
+  register: rsync_result
+  changed_when: rsync_result.stdout != ''
+  tags: always
+
+- name: Sync JavaSDK
+  ansible.builtin.shell: "rsync --itemize-changes --archive {{ javasdk_home }}/ {{ db2_home }}/java/jdk64/"
+  # always run
+  check_mode: no
+  become: yes
+  register: rsync_result
+  changed_when: rsync_result.stdout != ''
+  tags: always
+
+- name: Enable DB2 Service
+  ansible.builtin.systemd:
+    name: db2fmcd
+    enabled: yes
+  become: yes
+  tags: always
+
+- name: Reboot server
+  reboot:
+  become: yes
+  tags: always

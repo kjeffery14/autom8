@@ -1,0 +1,12 @@
+---
+# middleware/roles/db2/defaults/main.yml
+# @version 2.08_2025-MAR-18
+# @author Kevin Jeffery 
+
+db2_create_instances: no
+db2_edition: se
+db2_home: /opt/ibm/db2/V11.5
+db2_instance_name: db2inst1
+db2_version: 11.5.9.0
+
+javasdk_home: "{{ db2_source_dir }}/java"

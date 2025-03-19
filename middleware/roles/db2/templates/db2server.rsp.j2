@@ -1,0 +1,58 @@
+** middleware/roles/db2/templates/db2server.rsp.j2
+** @version 2.06_2022-JUL-01
+** @author Kevin Jeffery
+** https://www.ibm.com/docs/en/db2/11.5?topic=file-response-keywords
+** General Options
+PROD                      = DB2_SERVER_EDITION
+FILE                      = {{ db2_home }}
+LIC_AGREEMENT             = ACCEPT
+INSTALL_TYPE              = CUSTOM
+{% if db2_components is defined %}
+{% for comp in db2_components %}
+COMP                      = {{ comp.name }}
+{% endfor %}
+{% endif %}
+
+{% if db2_languages is defined %}
+{% for lang in db2_languages %}
+LANG                     = {{ lang }}
+{% endfor %}
+{% endif %}
+
+{% if db2_instances is defined and db2_create_instances | bool %}
+{% for inst in db2_instances %}
+** Instance Creation Settings
+** --------------------------
+INSTANCE                  = {{ inst.instance }}
+{{ inst.instance }}.NAME              = {{ inst.name }} 
+{{ inst.instance }}.GROUP_NAME        = {{ inst.group }} 
+{{ inst.instance }}.FENCED_USERNAME   = {{ inst.fenced_username | default(inst.name) }}
+{{ inst.instance }}.FENCED_GROUP_NAME = {{ inst.fenced_group | default(inst.group) }}
+{{ inst.instance }}.AUTOSTART         = YES
+{{ inst.instance }}.START_DURING_INSTALL = NO
+
+{%if inst.options is defined %}
+** Instance Optionals
+** ---------------------------
+{% for key, value in inst.options.iteritems() %}
+{{ inst.instance | upper }}.{{ key | upper }}             = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if inst.dbm_params is defined %}
+** Instance DBM CFG Settings
+** -------------------------
+{% for key, value in inst.dbm_params.iteritems() %}
+{{ inst.instance | upper }}.{{ key | upper }}             = {{ value }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if db2_global_params is defined and db2_global_params | length > 0 %}
+** Global Profile Registry Settings
+** --------------------------------
+{% for key, value in db2_global_params.iteritems() %}
+{{ key | upper }}             = {{ value }}
+{% endfor %}
+{% endif %}

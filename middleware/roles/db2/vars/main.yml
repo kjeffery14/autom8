@@ -1,0 +1,41 @@
+---
+# middkeware/roles/db2/vars/main.yml
+# @version v1.08_2025-MAR-18
+# @author Kevin Jeffery
+
+db2_packages:
+  - unzip
+  - pam
+  - pam.i686
+  - ksh
+  - binutils
+  - rsync
+
+db2_default_dbm_cfg:
+- using: SRVCON_AUTH
+  value: SERVER_ENCRYPT
+- using: DISCOVER_INST
+  value: DISABLE
+- using: DISCOVER
+  value: KNOWN
+- using: AUTHENTICATION
+  value: DATA_ENCRYPT
+- using: DIAGSIZE
+  value: 512
+- using: SVCENAME
+  value: "db2c_{{ db2_instance_name }}"
+
+db2_default_db_cfg:
+- using: LOGFILSIZ
+  value: 10000
+- using: LOGSECOND
+  value: 12
+- using: DISCOVER_DB
+  value: DISABLE
+- using: MAXFILOP
+  value: 256
+- using: CUR_COMMIT
+  value: ON
+
+gskit_home: /usr/local/ibm/gsk8
+gskit64_home: /usr/local/ibm/gsk8_64

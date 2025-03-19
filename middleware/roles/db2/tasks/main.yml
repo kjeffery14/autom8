@@ -1,0 +1,37 @@
+---
+# middleware/roles/db2/tasks/main.yml
+# @version 3.03_2025-MAR-18
+# @author Kevin Jeffery
+
+- name: Check if DB2 Installed
+  autom8.middleware.db2license:
+    action: version
+    db2_home: "{{ db2_home }}"
+  register: ret_db2_version
+  tags: always
+
+- name: Install DB2 Product
+  include_tasks: install.yml
+  when: not ret_db2_version.installed
+  tags: always
+
+- name: License DB2
+  autom8.middleware.db2license:
+    action: add_license
+    db2_home: "{{ db2_home }}"
+    id: "{{ db2_info.edition }}"
+    path: "{{ db2_source_dir}}/{{ db2_info.license_file }}"
+  tags: always
+
+- name: Add High Capacity Feature
+  autom8.middleware.db2license:
+    action: add_feature
+    db2_home: "{{ db2_home }}"
+    id: "{{ db2_info.edition }}"
+    feature: high_capacity
+    path: "{{ db2_source_dir}}/{{ db2_info.highcapacity_file }}"
+  when: db2_info.highcapacity_file is defined
+  tags: always
+
+- meta: flush_handlers
+  tags: always

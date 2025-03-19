@@ -1,0 +1,13 @@
+---
+# middleware/roles/db2/meta/main.yml
+# @version v1.00_2022-JUN-29
+# @author Kevin Jeffery
+galaxy_info:
+  author: Kevin Jeffery
+  description: Role to install and configure DB2
+  company: MicroKnight
+  license: Apache
+  min_ansible_version: 2.2
+# dependencies:
+#   - gskit
+#   - javasdk

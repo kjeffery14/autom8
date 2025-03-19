@@ -1,0 +1,9 @@
+[Unit]
+Description=DB2 v{{ db2_version }} FMC Daemon
+
+[Service]
+ExecStart={{ db2_home }}/bin/db2fmcd
+Restart=always
+
+[Install]
+WantedBy=default.target
