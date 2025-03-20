@@ -74,12 +74,12 @@ class IDSVersion:
 
 def main():
   module = AnsibleModule(
-      argument_spec=dict(
-          version = dict(required=False, type='str'),
-          log=dict(required=False, type='str', default='INFO', choices=['DEBUG', 'INFO', 'ERROR', 'CRITICAL']),
-          ldaphome=dict(required=True, type='str')
-      ),
-      supports_check_mode=False
+    argument_spec=dict(
+      version = dict(required=False, type='str'),
+      log=dict(required=False, type='str', default='INFO', choices=['DEBUG', 'INFO', 'ERROR', 'CRITICAL']),
+      ldaphome=dict(required=True, type='str')
+    ),
+    supports_check_mode=False
   )
 
   module.debug('Started idsversion module')
