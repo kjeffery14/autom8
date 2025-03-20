@@ -10,7 +10,6 @@
   register: ret_idsversion
   tags: always
 
-
 - name: Install ISDS Version {{ isds_version }}
   ansible.builtin.include_tasks: "{{ 'install_isds.yml' if isds_version is version('10.0', 'lt') else 'install_isvd.yml' }}"
   when: not (ret_idsversion.data.installed | bool)

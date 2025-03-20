@@ -17,8 +17,8 @@ class IDSVersion:
     self.ldaphome = self.module.params['ldaphome']
 
   def get_version(self):
-    data = self._get_version_info(compare_version=self.version)
-    self.module.exit_json(changed=False, data=data)
+    data, warnings = self._get_version_info(compare_version=self.version)
+    self.module.exit_json(changed=False, data=data, warnings=warnings)
 
   def _get_major_version(self, version):
     for major_version in major_versions:
@@ -28,8 +28,9 @@ class IDSVersion:
   
   def _get_version_info(self, compare_version=None):
     data = dict(installed=False, version='0.0.0.0', installed_versions=[])
+    warnings = []
     if os.path.exists(self.ldaphome) is False:
-      return data
+      return data, warnings
     data['installed'] = True
     stdout = self.module.run_command(self.ldaphome + '/bin/idsversion')[1]
     stdout_lines = stdout.split('\n')
@@ -49,7 +50,9 @@ class IDSVersion:
         data['is_upgrade'] = True
       elif current_major == compare_major and data['version'] != compare_version:
         data['is_fixpack'] = True
-    return data
+    else:
+      warnings.append('No version to compare with')
+    return data, warnings
   
   def _run_command(self, cmd):
     rc, stdout, stderr = self.module.run_command(cmd)
