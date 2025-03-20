@@ -28,12 +28,12 @@ class IDSVersion:
   
   def _get_version_info(self, compare_version=None):
     data = dict(installed=False, version='0.0.0.0')
-    if os.path.exists(self.tdshome) is False:
+    if os.path.exists(self.ldaphome) is False:
       return data
     data['installed'] = True
-    stdout = self.module.run_command(self.tdshome + '/bin/idsversion')[1]
+    stdout = self.module.run_command(self.ldaphome + '/bin/idsversion')[1]
     stdout_lines = stdout.split('\n')
-    current_major = self.tdshome.split('V')[1]
+    current_major = self.ldaphome.split('V')[1]
     for line in stdout_lines:
       if line.startswith('64-bit TDS server version:'):
         version = line.split(':')[1]
