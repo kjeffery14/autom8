@@ -27,7 +27,7 @@ class IDSVersion:
     return 'n.a.'
   
   def _get_version_info(self, compare_version=None):
-    data = dict(installed=False, version='0.0.0.0', installed_versions=[])
+    data = dict(installed=False, version='0.0.0.0', installed_versions=[], is_upgrade=False, is_fixpack=False)
     warnings = []
     if os.path.exists(self.ldaphome) is False:
       return data, warnings
