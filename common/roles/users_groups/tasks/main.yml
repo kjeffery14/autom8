@@ -69,8 +69,6 @@
 - name: Set PNE
   ansible.builtin.command:
     cmd: "chage -I -1 -m 0 -M 99998 -E -1 {{ item.name }}"
-  args:
-    warn: no
   become: yes
   loop: "{{ users_groups_list }}"
   loop_control:
