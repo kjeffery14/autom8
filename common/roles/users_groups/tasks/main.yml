@@ -1,0 +1,99 @@
+---
+# common/roles/users_groups/main.yml
+# @version v2025.3.19.0
+# @author Kevin Jeffery
+
+- name: Get User List
+  ansible.builtin.getent:
+    database: passwd
+  become: yes
+  tags: always
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+  tags: always
+
+- name: Set Variables
+  ansible.builtin.set_fact:
+    users_groups_groups: "{{ users_groups_groups | default([]) + [{'group': item.group, 'gid': item.gid | default('')}] }}"
+    sssd_enabled: False
+  loop: "{{ users_groups_list }}"
+  loop_control:
+    label: "{{ item.group }}"
+  tags: always
+
+- name: Save sssd state
+  ansible.builtin.set_fact:
+    sssd_enabled: True
+  when: ansible_facts['services']['sssd.service'] is defined and ansible_facts['services']['sssd.service']['state'] == 'running'
+  tags: always
+
+- name: Stop System Security Services
+  ansible.builtin.systemd:
+    name: sssd
+    state: stopped
+  become: yes
+  when: sssd_enabled | bool
+  tags: always
+
+- name: Create Groups
+  ansible.builtin.group:
+    name: "{{ item.group }}"
+    gid: "{{ item.gid | default(omit, True) }}"
+    state: "present"
+  become: yes
+  loop: "{{ users_groups_groups }}"
+  loop_control:
+    label: "{{ item.group }}"
+  when: item.group is defined
+  tags: always
+
+- name: Create Users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+    home: "{{ item.home | default(omit) }}"
+    createhome: "{{ item.createhome | default(true) }}"
+    password: "{{ item.password | default(omit, True) }}"
+    comment: "{{ item.comment | default(omit, True) }}"
+    shell: "{{ item.shell | default(omit, True) }}"
+    update_password: on_create
+  become: yes
+  loop: "{{ users_groups_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: ret_create
+  tags: always
+
+- name: Set PNE
+  ansible.builtin.command:
+    cmd: "chage -I -1 -m 0 -M 99998 -E -1 {{ item.name }}"
+  args:
+    warn: no
+  become: yes
+  loop: "{{ users_groups_list }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: ret_create.changed    
+  tags: always
+
+- name: Add {{ ansible_user }} to {{ users_groups_group | default('') }}
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: "{{ users_groups_group }}"
+    append: yes
+  become: yes
+  when:
+    - users_groups_group is defined
+    - users_groups_group != ''
+  tags: always
+
+# service sssd start
+- name: Start System Security Services
+  ansible.builtin.systemd:
+    name: sssd
+    state: started
+  become: yes
+  when: sssd_enabled | bool
+  tags: always

@@ -1,0 +1,21 @@
+---
+namespace: autom8
+name: middleware
+version: 2025.3.19
+readme: README.md
+authors:
+- Kevin Jeffery <kevin@microknight.com>
+description: IAM common collection
+license:
+- Apache-2.0
+tags:
+- DB2
+- WAS
+- ISDS
+- ISVD
+- ISDI
+dependencies: {}
+repository: https://github.com/kjeffery14/autom8
+# documentation:
+# homepage:
+# issues:

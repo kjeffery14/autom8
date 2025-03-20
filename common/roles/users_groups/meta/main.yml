@@ -1,0 +1,10 @@
+---
+# common/roles/users_groups/meta/main.yml
+# @version v2025.3.19.0
+# @author Kevin Jeffery
+galaxy_info:
+  author: Kevin Jeffery
+  description: Common Role to Create users and groups
+  company: MicroKnight
+  license: Apache
+  min_ansible_version: 2.2
