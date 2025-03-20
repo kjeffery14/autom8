@@ -1,6 +1,6 @@
 ---
 namespace: autom8
-name: middleware
+name: common
 version: 2025.3.19
 readme: README.md
 authors:
