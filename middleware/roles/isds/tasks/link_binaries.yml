@@ -1,0 +1,29 @@
+---
+# middleware/roles/isds/tasks/link_binaries.yml
+# @version v1.03_2025-MAR-19
+# @author Kevin Jeffery
+
+- name: Configure ldapdb.properties
+  ansible.builtin.template: 
+    src:  ldapdb.j2
+    dest: "{{ ldap_home }}/etc/ldapdb.properties"
+    group: "idsldap"
+    mode: 0644
+  become: yes
+  tags: always
+
+- name: Fix permissions on /opt/ibm/ldap
+  ansible.builtin.file:
+    path: /opt/ibm/ldap
+    mode: 0775
+  become: yes
+  tags: always
+
+- name: Link IBM Client Utilities
+  ansible.builtin.command:
+    cmd: "{{ ldap_home }}/bin/idslink -i -f -q"
+  become: yes
+  changed_when: ret_out.rc in [0,2]
+  failed_when: ret_out.rc not in [0,2,4]
+  register: ret_out
+  tags: always

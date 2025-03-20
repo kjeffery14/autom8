@@ -1,0 +1,6 @@
+---
+# middleware/roles/isds/vars/main.yml
+# @version v1.06_2025-MAR-19
+# @author Kevin Jeffery
+
+isds_ga_iso: sds64-linux-x86-64.iso

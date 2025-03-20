@@ -1,0 +1,33 @@
+---
+# middleware/roles/isds/tasks/fixpack.yml
+# @version 1.02_2025-MAR-19
+# @author Kevin Jeffery
+
+- name: Get Version
+  autom8.middleware.idsversion:
+    ldaphome: "{{ ldap_home }}"
+    version: "{{ isds_version }}"
+  register: ret_idsversion
+  tags: always
+
+- block:
+  - name: Unarchive fixpack
+    ansible.builtin.unarchive:
+      src: "{{ isds_source_dir }}/{{ isds_info.fixpack_archive }}"
+      dest: "{{ isds_source_dir }}"
+      remote_src: yes
+      creates: "{{ isds_source_dir }}/{{ isds_info.fixpack_creates }}"
+
+  - name: Update the ISDS license
+    ansible.builtin.command:
+      cmd: "{{ isds_source_dir }}/{{ isds_info.fixpack_creates }}/license/idsLicense -q"
+    become: True
+
+  - name: Install the ISDS Fixpack
+    ansible.builtin.command: "{{ isds_source_dir }}/{{ isds_info.fixpack_creates }}/idsinstall -u -f"
+    become: True
+
+  when:
+    - ret_idsversion.data.fixpack | bool
+    - isds_info.fixpack_archive is defined
+  tags: always

@@ -1,0 +1,27 @@
+---
+# roles/tds/tasks/install_isvd.yml
+# @version 1.01_2024-JUL-03
+# @author Kevin Jeffery
+# ISVD Installation
+
+- name: Decompressing the Binary
+  ansible.builtin.unarchive:
+    src: "{{ isds_source_dir }}/{{ isds_info.archive }}"
+    remote_src: yes
+    dest: "{{ isds_source_dir }}"
+    creates: "{{ isds_source_dir }}/{{ isds_info.creates }}"
+  tags: always
+
+- name: ISVD License
+  ansible.builtin.command:
+    cmd: "{{ isds_source_dir }}/{{ isds_info.creates }}/license/idsLicense -q"
+    creates: "{{ ldap_home }}/license"
+  become: yes
+  tags: always
+
+- name: ISVD Install
+  ansible.builtin.command:
+    cmd: "rpm --force -ivh {{ isds_source_dir }}/{{ isds_info.creates }}/images/idsldap*"
+    creates: "{{ ldap_home }}/sbin"
+  become: yes
+  tags: always

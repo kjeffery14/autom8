@@ -1,0 +1,21 @@
+---
+# roles/isds/tasks/install.yml
+# @version 2.16_2025-MAR-19
+# @author Kevin Jeffery
+
+- name: Get Version
+  autom8.middleware.idsversion:
+    ldaphome: "{{ ldap_home }}"
+    version: "{{ isds_version }}"
+  register: ret_idsversion
+  tags: always
+
+
+- name: Install ISDS Version {{ isds_version }}
+  ansible.builtin.include_tasks: "{{ 'install_isds.yml' if isds_version is version('10.0', 'lt') else 'install_isvd.yml' }}"
+  when: not (ret_idsversion.data.installed | bool)
+  tags: always
+
+- name: Link binaries and Utilities
+  ansible.builtin.include_tasks: link_binaries.yml
+  tags: always

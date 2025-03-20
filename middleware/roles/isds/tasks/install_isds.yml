@@ -1,0 +1,100 @@
+---
+# roles/tds/tasks/install_isds.yml
+# @version 1.01_2024-JUL-03
+# @author Kevin Jeffery
+# ISDS Installation
+
+# Disable DB2 Prerequisite check for DB2 v11.1
+- name: Create ISDS Install directory
+  ansible.builtin.file:
+    path: "{{ ldap_home }}/install"
+    state: "directory"
+  become: yes
+  when:
+    - db2_version is version('11.1.0.0', 'ge')
+  tags: always
+
+- name: Disable DB2 Prerequisite check
+  ansible.builtin.copy:
+    dest: "{{ ldap_home }}/install/IBMLDAP_INSTALL_SKIPDB2REQ"
+    content: ""
+  become: True
+  when: db2_version is version('11.1.0.0', 'ge')
+  tags: always
+
+- name: Stat the ISO Image
+  ansible.builtin.stat:
+    path: "{{ software_dest_dir }}/{{ isds_info[isds_version].iso }}"
+    get_checksum: no
+  register: ret_stat
+  tags: always
+
+- name: Stage the ISO Image
+  ansible.builtin.copy:
+    src: "{{ software_source_dir }}/{{ isds_info[isds_version].iso }}"
+    dest: "{{ software_dest_dir }}/{{ isds_info[isds_version].iso }}"
+  when: not ret_stat.stat.exists
+  tags: always
+
+- name: Mount the ISO Image {{ software_dest_dir }}/{{ isds_info[isds_version].iso }}
+  ansible.posix.mount: 
+    opts: "loop,ro"
+    src: "{{ software_dest_dir }}/{{ isds_info[isds_version].iso }}"
+    fstype: iso9660
+    path: "{{ isds_mount_point }}"
+    state: mounted
+  changed_when: false
+  become: True
+  tags: always
+
+- name: ISDS License
+  ansible.builtin.command:
+    cmd: "{{ isds_mount_point }}/license/idsLicense -q{"
+    creates: "{{ ldap_home }}/license"
+  become: True
+  tags: always
+
+- name: ISDS Install
+  ansible.builtin.command:
+    cmd: "rpm --force -ivh }{{ isds_mount_point }}/images/idsldap*"
+    creates: "{{ ldap_home }}/sbin"
+    warn: False
+  become: True
+  register: install_tds
+  tags: always
+
+- name: Configure ldapdb.properties
+  ansible.builtin.template: 
+    src:  "ldapdb.properties.j2"
+    dest: "{{ ldap_home }}/etc/ldapdb.properties"
+    group: "idsldap"
+    mode: 0644
+  become: True
+  tags: always
+
+- name: Link IBM Client Utilities
+  ansible.builtin.command:
+    cmd: "{{ ldap_home }}/bin/idslink -i"
+    creates: "/bin/idsldapsearch"
+  become: True
+  tags: always
+
+- name: Un-mount the ISO Image
+  ansible.posix.mount: 
+    path: "{{ isds_mount_point }}"
+    state: unmounted
+  changed_when: False
+  failed_when: False
+  become: True
+  tags: always
+
+- name: Get ISDS Version
+  ansible.builtin.include_tasks: get_version.yml
+  tags: always
+
+- name: Install fixpack
+  ansible.builtin.include_tasks: fixpack.yml
+  when:
+    - not isds_instance_version.version != 'n.a.'
+    - isds_instance_version.version is version(isds_version, 'lt')
+  tags: always

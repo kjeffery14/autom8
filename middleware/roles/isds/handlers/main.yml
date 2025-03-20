@@ -1,0 +1,13 @@
+---
+# middleware/roles/isds/handlers/main.yml
+# @version v1.04_2025-MAR-19
+# @author Kevin Jeffery
+
+- name: Sync JavaSDK
+  ansible.builtin.shell: "rsync --itemize-changes --archive {{ javasdk_home }}/ {{ ldap_home }}/java"
+  # always run
+  check_mode: no
+  become: yes
+  register: rsync_result
+  changed_when: rsync_result.stdout != ''
+  tags: always

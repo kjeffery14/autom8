@@ -1,0 +1,22 @@
+# middleware/roles/isds/defaults/main.yml
+# @version 2.11_2025-MAR-19
+# @author Kevin Jeffery
+
+db2_home: /opt/ibm/DB2/V11.5
+db2_version: 11.5.9.0
+
+isds_mount_point: "/mnt/tds"
+isds_source_dir: /tmp
+# Always create the first ISDS Instance User and Group if you want to control gid/uid/home/etc
+isds_users:
+- name: idsldap
+  gid: "{{ idsldap_gid | default(omit) }}"
+  group: "idsldap"
+  home: "{{ isdsldap_home | default('/home/idsldap') }}"
+  password: "{{ ldap_admin_pwd | password_hash('sha512', 61420 | random(seed=inventory_hostname) | string) }}"
+  uid: "{{ idsldap_uid | default(omit) }}"
+isds_version: 10.0.3
+
+javasdk_home: "{{ isds_source_dir }}/java"
+
+ldap_home: /opt/ibm/ldap/V10.0.3

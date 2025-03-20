@@ -1,0 +1,20 @@
+---
+# middleware/roles/isds/tasks/main.yml
+# @version 2.18_2025-MAR-19
+# @author Kevin Jeffery
+
+- name: Create instance Users
+  vars:
+    users_groups_list: "{{ isds_users }}"
+    users_groups_group: idsldap
+  ansible.builtin.include_role:
+    name: autom8.common.users_groups
+  tags: always
+
+- name: Install ISDS
+  ansible.builtin.include_tasks: install.yml
+  tags: always
+
+- name: Install ISDS Fixpack
+  ansible.builtin.include_tasks: fixpack.yml
+  tags: always
