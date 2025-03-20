@@ -17,7 +17,7 @@ class IDSVersion:
     self.ldaphome = self.module.params['ldaphome']
 
   def get_version(self):
-    data = self._get_version_info(self.version)
+    data = self._get_version_info(compare_version=self.version)
     self.module.exit_json(changed=False, data=data)
 
   def _get_major_version(self, version):
