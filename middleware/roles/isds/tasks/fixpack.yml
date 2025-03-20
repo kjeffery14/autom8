@@ -28,6 +28,6 @@
     become: True
 
   when:
-    - ret_idsversion.data.fixpack | bool
+    - ret_idsversion.data.is_fixpack | bool
     - isds_info.fixpack_archive is defined
   tags: always
