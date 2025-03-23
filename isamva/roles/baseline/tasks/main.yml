@@ -155,6 +155,21 @@
   when: isamva_keystore_list is defined
   tags: keystores
 
+- name: Import Personal Certificates
+  ansible.builtin.include_role:
+    name: autom8.isamva.import_personal_certificates
+    apply:
+      tags: keystores
+  vars:
+    isamva_kdb_name: "{{ keystore_item.kdb_name }}"
+    isamva_personal_certificates: "{{ keystore_item.private_keys }}"
+  loop: "{{ isamva_keystore_list }}"
+  loop_control:
+    label: "{{ keystore_item.kdb_name }}"
+    loop_var: keystore_item
+  when: isamva_keystore_list is defined
+  tags: keystores
+
 - meta: flush_handlers
 
 # - name: Import Signer Certificates

@@ -1,18 +1,19 @@
 ---
-# isamva/roles/import_signer_certificates/main.yml.yml
+# isamva/roles/import_private_certificates/main.yml.yml
 # @version v2025.3.23.0
 # @author Kevin Jeffery
 
-- name: Import Signer Certificates {{ isamva_kdb_name }}
+- name: Import Private Certificates {{ isamva_kdb_name }}
   ibm.isam.isam:
     log: "{{ log_level | default(omit) }}"
     force: "{{ force | default(omit) }}"
-    action: ibmsecurity.isam.base.ssl_certificates.signer_certificate.import_cert
+    action: ibmsecurity.isam.base.ssl_certificates.personal_certificate.import_cert
     isamapi:
       kdb_id: "{{ isamva_kdb_name }}"
       label: "{{ item.label }}"
       cert: "{{ isamva_certificate_dir }}/{{ item.cert | default(item.file) }}"
-  loop: "{{ isamva_signer_certificates }}"
+      password: "{{ item.passphrase | default(item.password) }}"
+  loop: "{{ isamva_personal_certificates }}"
   loop_control:
     label: "{{ item.label }}"
   notify: Commit Changes
