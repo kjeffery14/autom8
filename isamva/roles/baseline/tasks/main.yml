@@ -128,6 +128,30 @@
 
 - meta: flush_handlers
 
+- name: Create Keystores
+  ansible.builtin.include_role:
+    name: ibm.isam.base.create_ssl_certificate_databases
+  vars:
+    create_certificate_databases: "{{ isamva_keystore_list }}"
+  when: isamva_keystore_list is defined
+  notify: Commit Changes
+  tags: keystores
+
+- meta: flush_handlers
+
+- name: Import Signer Certificates
+  ansible.builtin.include_role:
+    name: autom8.isamva.import_signer_certificates
+  vars:
+    isamva_signer_certificates: "{{ keystore_item.signer_certs }}"
+    isamva_kdb_name: "{{ item.kdb_name }}"
+  loop: "{{ isamva_keystore_list }}"
+  loop_control:
+    label: "{{ item.kdb_name }}"
+  when: isamva_keystore_list is defined
+  notify: Commit Changes and Restart
+  tags: keystores
+
 # - name: Import Signer Certificates
 #   include_role:
 #     name: isam_config/import_signer_certificates
