@@ -184,7 +184,7 @@
 
 - name: Set LDAP timeout to non-zero value
   ibm.isam.isam:
-    action: ibm.isam.web.runtime.configuration.entry.update
+    action: ibmsecurity.isam.web.runtime.configuration.entry.update
     isamapi:
       resource_id: ldap.conf
       stanza_id: ldap
