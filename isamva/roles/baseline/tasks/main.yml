@@ -131,6 +131,8 @@
 - name: Create Keystores
   ansible.builtin.include_role:
     name: ibm.isam.base.create_ssl_certificate_databases
+    apply:
+      tags: keystores
   vars:
     create_certificate_databases: "{{ isamva_keystore_list }}"
   when: isamva_keystore_list is defined
@@ -141,6 +143,8 @@
 - name: Import Signer Certificates
   ansible.builtin.include_role:
     name: autom8.isamva.import_signer_certificates
+    apply:
+      tags: keystores
   vars:
     isamva_signer_certificates: "{{ keystore_item.signer_certs }}"
     isamva_kdb_name: "{{ keystore_item.kdb_name }}"
