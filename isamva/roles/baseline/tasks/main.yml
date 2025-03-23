@@ -172,20 +172,12 @@
 
 - meta: flush_handlers
 
-# - name: Import Signer Certificates
-#   include_role:
-#     name: isam_config/import_signer_certificates
-#   vars:
-#     kdb_item:
-#       name: "rt_profile_keys"
-#       kdb: "rt_profile_keys.kdb"
-#     signer_certificates: "{{ isamva_signer_certificates }}"
-#     expired_certificates:
-#       - label: "CN=*.ice.ibmcloud.com,O=International Business Machines Corporation,L=Armonk,ST=New York,C=US"
-
-# - meta: flush_handlers
-
-# - name: Configure System Alert Forwarding
-#   include_role:
-#     name: isam_config/system_alerts
-#   when: isamva_system_alerts is defined
+- name: Configure Web Runtime
+  ansible.builtin.include_role:
+    name: ibm.isam.web.configure_policyserver
+    apply:
+      tags: web_runtime
+  vars:
+    policyserver_runtime: "{{ isamva_web_runtime }}"
+  when: isamva_web_runtime is defined
+  tags: web_runtime
