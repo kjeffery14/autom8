@@ -134,7 +134,6 @@
   vars:
     create_certificate_databases: "{{ isamva_keystore_list }}"
   when: isamva_keystore_list is defined
-  notify: Commit Changes
   tags: keystores
 
 - meta: flush_handlers
@@ -149,8 +148,9 @@
   loop_control:
     label: "{{ item.kdb_name }}"
   when: isamva_keystore_list is defined
-  notify: Commit Changes and Restart
   tags: keystores
+
+- meta: flush_handlers
 
 # - name: Import Signer Certificates
 #   include_role:
