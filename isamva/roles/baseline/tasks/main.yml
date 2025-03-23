@@ -184,13 +184,12 @@
 
 - name: Set LDAP timeout to non-zero value
   ibm.isam.isam:
-    action: ibmsecurity.isam.web.runtime.configuration.entry.update
+    action: ibmsecurity.isam.web.runtime.configuration.entry.set
     isamapi:
       resource_id: ldap.conf
       stanza_id: ldap
-      entry_id: "connection-inactivity"
-      value_id: "{{ isamva_ldap_timeout | default('270') }}"
-      value: "{{ isamva_ldap_timeout | default('270') }}"
+      entries:
+      - ["connection-inactivity", "{{ isamva_ldap_timeout | default('270') }}"]
   notify:
   - Commit Changes
   - Restart Web Runtime
