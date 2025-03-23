@@ -143,7 +143,7 @@
     name: autom8.isamva.import_signer_certificates
   vars:
     isamva_signer_certificates: "{{ keystore_item.signer_certs }}"
-    isamva_kdb_name: "{{ item.kdb_name }}"
+    isamva_kdb_name: "{{ keystore_item.kdb_name }}"
   loop: "{{ isamva_keystore_list }}"
   loop_control:
     label: "{{ keystore_item.kdb_name }}"
