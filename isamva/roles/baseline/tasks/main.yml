@@ -146,7 +146,8 @@
     isamva_kdb_name: "{{ item.kdb_name }}"
   loop: "{{ isamva_keystore_list }}"
   loop_control:
-    label: "{{ item.kdb_name }}"
+    label: "{{ keystore_item.kdb_name }}"
+    loop_var: keystore_item
   when: isamva_keystore_list is defined
   tags: keystores
 
