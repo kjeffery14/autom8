@@ -1,6 +1,6 @@
 ---
 # isamva/roles/baseline/main.yml.yml
-# @version v2025.2.17
+# @version v2025.3.23.0
 # @author Kevin Jeffery
 
 - name: Enable FIPS, Accept SLA, Complete Setup
@@ -82,7 +82,7 @@
 
 - name: Update Management Certificate
   ansible.builtin.include_role:
-    name: ibm.isam.base.set_management_ssl_certificate
+    name: ibm.isam.base.set_management_ssl_cert
   vars:
     update_management_ssl_cert_cert: "{{ isamva_lmi_cert_item.name }}"
     update_management_ssl_cert_pwd: "{{ isamva_lmi_cert_item.pwd }}"
