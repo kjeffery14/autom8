@@ -6,8 +6,15 @@
 - name: Enable FIPS, Accept SLA, Complete Setup
   ansible.builtin.include_role:
     name: ibm.isam.base.first_steps
+    apply:
+      tags:
+      - first_steps
+      - baseline
   vars:
     FIPS_cfg: "{{ isamva_fips_cfg }}"
+  tags:
+  - first_steps
+  - baseline
   
 - name: Check Admin Password
   ansible.builtin.uri:
@@ -23,6 +30,9 @@
       Accept: application/json
   check_mode: false
   register: result
+  tags:
+  - admin_password
+  - baseline
 
 - name: Change Admin Password if necessary
   ansible.builtin.include_role:
@@ -49,6 +59,7 @@
       - interfaces
       - baseline
   tags:
+  - baseline
   - interfaces
 
 - name: Set Applicance Hostname
