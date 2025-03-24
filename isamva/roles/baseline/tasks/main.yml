@@ -27,16 +27,29 @@
 - name: Change Admin Password if necessary
   ansible.builtin.include_role:
     name: ibm.isam.base.change_admin_password
+    apply:
+      tags:
+      - admin_password
+      - baseline
   vars:
     old_password: "{{ isamva_old_password }}"
     new_password: "{{ isamva_new_password }}"
   when:
     - result is defined
     - result.status == 200
+  tags:
+  - admin_password
+  - baseline
 
 - name: Configure Interfaces
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_interfaces
+    apply:
+      tags:
+      - interfaces
+      - baseline
+  tags:
+  - interfaces
 
 - name: Set Applicance Hostname
   ansible.builtin.include_role:
