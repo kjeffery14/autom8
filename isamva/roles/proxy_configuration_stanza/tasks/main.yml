@@ -12,7 +12,7 @@
       reverseproxy_id: "{{ isamva_proxy_item.inst_name }}"
       stanza_id: "{{ isamva_proxy_item.stanza }}"
       entries: "{{ item.entries }}"
-  loop: "{{ isamva_stanza_item.proxy_conf }}"
+  loop: "{{ isamva_proxy_item.proxy_conf }}"
   loop_control:
     label: "{{ isamva_proxy_item.stanza }}"
   notify:
