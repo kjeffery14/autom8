@@ -17,7 +17,7 @@
     label: "{{ item.stanza }}"
   notify:
   - Commit Changes
-  when:
-  - isamva_proxy_config.proxy_conf is defined
+  # when:
+  # - isamva_proxy_config.proxy_conf is defined
   # - item.entries is defined
   tags: always
