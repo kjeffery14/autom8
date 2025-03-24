@@ -18,6 +18,6 @@
   notify:
   - Commit Changes
   when:
-  - isamva_stanza_item.proxy_conf is defined
+  - isamva_proxy_item.proxy_conf is defined
   - item.entries is defined
   tags: always
