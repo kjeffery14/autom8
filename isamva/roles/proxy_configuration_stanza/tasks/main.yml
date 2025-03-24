@@ -17,6 +17,7 @@
     label: "{{ item.stanza }}"
   notify:
   - Commit Changes
+  - Restart Reverse Proxy
   # when:
   # - isamva_proxy_config.proxy_conf is defined
   # - item.entries is defined
