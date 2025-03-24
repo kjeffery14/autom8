@@ -91,6 +91,7 @@
   when: isamva_host_records is defined
 
 - meta: flush_handlers
+  tags: always
 
 - name: Activate Modules
   ansible.builtin.include_role:
@@ -113,6 +114,7 @@
   when: isamva_lmi_cert_item is defined
 
 - meta: flush_handlers
+  tags: always
 
 - name: Advanced Tuning Parameters
   ansible.builtin.include_role:
@@ -151,6 +153,7 @@
   notify: Commit Changes and Restart
 
 - meta: flush_handlers
+  tags: always
 
 - name: Create Keystores
   ansible.builtin.include_role:
@@ -195,6 +198,7 @@
   tags: keystores
 
 - meta: flush_handlers
+  tags: always
 
 - name: Configure Web Runtime
   ansible.builtin.include_role:
@@ -217,4 +221,6 @@
   notify:
   - Commit Changes
   - Restart Web Runtime
-  tags: web_runtime
+  tags:
+  - baseline
+  - web_runtime
