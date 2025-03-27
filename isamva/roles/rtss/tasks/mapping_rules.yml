@@ -22,6 +22,7 @@
 
   always:
   - meta: flush_handlers
+    tags: always
 
   tags: always
 ### End: Mapping Rules Configuration
