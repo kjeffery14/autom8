@@ -102,7 +102,7 @@
   when:
     - ret_master.data.is_master | bool
     - rtss_mapping_rules_list is defined
-    - rtss_mapping_rules_list | select_attr('state', 'eq', 'present') | length > 0
+    - rtss_mapping_rules_list | selectattr('state', 'eq', 'present') | length > 0
   tags:
   - rtss
   - mapping_rules

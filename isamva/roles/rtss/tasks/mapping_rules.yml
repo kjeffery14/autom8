@@ -15,7 +15,7 @@
         upload_filename: "{{ rtss_mapping_rules_dir }}/{{ item.filename }}"
     loop_control:
       label: "{{ item.name }}"
-    loop: "{{ rtss_mapping_rules_list | select_attr('state', 'eq', 'present') }}"
+    loop: "{{ rtss_mapping_rules_list | selectattr('state', 'eq', 'present') }}"
     notify:
     - Commit Changes
     - Restart AAC Runtime
