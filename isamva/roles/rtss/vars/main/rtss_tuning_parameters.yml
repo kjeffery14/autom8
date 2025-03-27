@@ -32,8 +32,14 @@ rtss_tuning_parameters:
   value: "{{ rtss_runtime_max_heap_size }}"
 - option: "max_pool_size"
   value: "{{ rtss_runtime_max_pool_size }}"
+- option: "max_threads"
+  value: "0" # default: unset (-1 or 0 to set to unlimited)
+  version: "9.0.6"
 - option: "min_heap_size"
   value: "{{ rtss_runtime_min_heap_size }}"
+- option: "min_threads"
+  value: "0" # default: unset (-1 or 0 to set to number of hardware threads)
+  version: "9.0.6"
 - option: "session_invalidation_timeout"
   # This parameter defines the amount of time a session can remain unused before it is no longer valid. Default 600 seconds (unset).
   value: "{{ rtss_runtime_session_invalidation_timeout }}"
@@ -46,12 +52,6 @@ rtss_tuning_parameters:
   value: "{{ rtss_runtime_session_reaper_poll_interval }}"
 - option: "suppress_sensitive_trace"
   value: "{{ rtss_runtime_suppress_sensitive_trace | default(true) }}"
-# - option: "min_threads"
-#   value: "0" # default: unset (-1 or 0 to set to number of hardware threads)
-#   version: "9.0.6"
-# - option: "max_threads"
-#   value: "0" # default: unset (-1 or 0 to set to unlimited)
-#   version: "9.0.6"
 - option: "trace_specification"
   value: "{{ rtss_runtime_trace_specification }}"
   version: "9.0.7"
