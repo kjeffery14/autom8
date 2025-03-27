@@ -5,7 +5,7 @@
 
 ### RTSS Users
 - block:
-  - name: Add RTSS Users
+  - name: Add RTSS User
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.user_registry.user.add
       isamapi:
@@ -15,10 +15,26 @@
         - adminGroup
     loop: "{{ rtss_user_registry_list }}"
     loop_control:
-      label: "Add RTSS user: {{ item.name }}"
+      label: "User: {{ item.name }}"
+    register: ret_user_add
     notify:
     - Commit Changes
     - Restart AAC Runtime
+
+  - name: Set RTSS User Password
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.user_registry.user.set_pw
+      isamapi:
+        id: "{{ item.name }}"
+        password: "{{ item.password }}"
+    loop: "{{ rtss_user_registry_list }}"
+    loop_control:
+      label: "User: {{ item.name }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when: not ret_user_add.changed
+
   always:
   - meta: flush_handlers
 
