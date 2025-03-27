@@ -8,7 +8,7 @@
   - name: Check file
     ansible.builtin.stat:
       path: "{{ rtss_authentication_policies_dir }}/{{ rtss_authentication_policies_list[0] }}"
-      delegate_to: localhost
+    delegate_to: localhost
     register: ret_stat
 
   - name: Debug
