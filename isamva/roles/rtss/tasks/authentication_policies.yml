@@ -13,7 +13,7 @@
         uri: "{{ item.uri }}"
         description: "{{ item.description | default(omit) }}"
         dialect: "{{ item.dialect | default(omit) }}"
-        enabled: "{{ item.enabled | default(omit) }}"
+        enabled: "{{ item.enabled | default('false') | bool }}"
         formatting: "{{ item.formatting | default(omit) }}"
         policy_file: "{{ rtss_authentication_policies_dir }}/{{ item.filename }}"
     loop_control:
@@ -24,13 +24,13 @@
     - Restart AAC Runtime
     when:
       - rtss_authentication_policies_list | selectattr('state', 'eq', 'present') | length > 0
-- block:
+
   - name: ISAM RTSS Authentication Policies - Activate
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.authentication.policies.activate
       isamapi:
         name: "{{ item.name }}"
-        enabled: "{{ item.enabled | default(omit) }}"
+        enabled: "{{ item.enabled | bool }}"
     loop_control:
       label: "{{ item.name }}"
     loop: "{{ rtss_authentication_policies_list | selectattr('state', 'eq', 'activated') }}"
@@ -39,6 +39,7 @@
     - Restart AAC Runtime
     when:
       - rtss_authentication_policies_list | selectattr('state', 'eq', 'activated') | length > 0
+      - item.enabled is defined
 
   always:
   - meta: flush_handlers
