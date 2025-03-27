@@ -5,6 +5,15 @@
 
 ### Authentication Policies Configuration
 - block:
+  - name: Check file
+    ansible.builtin.stat:
+      path: "{{ rtss_authentication_policies_dir }}/{{ rtss_authentication_policies_list[0] }}"
+    register: ret_stat
+
+  - name: Debug
+    ansible.builtin.debug:
+      var: ret_stat.stat
+  
   - name: ISAM RTSS Authentication Policies - Import
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.authentication.policies.set_file
