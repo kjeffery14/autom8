@@ -1,29 +1,13 @@
 ---
 # isamva/roles/rtss/tasks/main.yml
-# @version v2025.3.26.0
+# @version v2025.3.27.0
 # @author Kevin Jeffery
 
 - name: Get Cluster Master
   ibm.isam.isam:
     action: ibmsecurity.isam.base.cluster.node.get_master
   register: ret_master
-  tags:
-  - rtss
-  - advanced_configuration
-  - advanced_configuration_tags
-  - authentication_mechanisms
-  - isam_runtime_connections
-  - ldap_connections
-  - macotp_configuration
-  - mmfa_configuration 
-  - point_of_contact
-  - risk_profile
-  - runtime_parameters
-  - scim_configuration
-  - server_connections
-  - server_cleanup
-  - user_registry
-  - web_service_connections
+  tags: always
 
 - name: Set listening interfaces
   ibm.isam.isam:
