@@ -1,6 +1,6 @@
 ---
 # isamve?roles/rtss/vars/main/rtss_common_configuration.yml
-# @version v2025.3.26.0
+# @version v2025.3.27.0
 # @author Kevin Jeffery
 
 rtss_common_configuration:
@@ -122,7 +122,7 @@ rtss_common_configuration:
   - live.demos
   - live.demos.settings
 - key: "otp.email.smtpTlsProtocol"
-  value: "rtss_email_smtpTlsProtocol"
+  value: "{{ rtss_opt_email_smtpTlsProtocol }}"
   tags:
   - "otp"
   - "otp.email"
