@@ -1,0 +1,22 @@
+---
+# isamva/roles/rtss/tasks/advanced_configuration.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+- name: ISAM RTSS Configuration
+  ibm.isam.isam:
+    action: ibmsecurity.isam.aac.advanced_configuration.update
+    isamapi:
+      key: "{{ item.key }}"
+      value: "{{ item.value }}"
+      sensitive: "{{ item.sensitive | default(False) }}"
+  loop_control:
+    label: "{{ item.key }}"
+  loop: "{{ rtss_common_configuration + rtss_attribute_collection + rtss_hvdb_cleanup + rtss_mmfa + rtss_oauth20 + rtss_sps + rtss_state_persistence + rtss_util }}"
+  when: 
+  - (item.version is not defined) or (isam_version is version(item.version, 'ge'))
+  - (item.deprecated is not defined) or (isam_version is version(item.deprecated, 'lt'))
+  notify:
+  - Commit Changes
+  - Restart AAC Runtime
+  tags: always

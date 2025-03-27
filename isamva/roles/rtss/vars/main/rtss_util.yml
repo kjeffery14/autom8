@@ -1,0 +1,132 @@
+---
+# isamva/roles/rtss/vars/main/rtss_util.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_util:
+- key: "util.httpClient.defaultSSLProtocol"
+  value: "{{ rtss_util_httpClient_defaultSSLProtocol }}"
+  tags:
+  - "util"
+  - "util.httpClient"
+- key: "util.httpClient.defaultTrustStore"
+  value: "{{ rtss_util_httpClient_defaultTrustStore }}"
+  tags:
+  - "util"
+  - "util.httpClient"
+- key: "util.httpClient.maxActiveConnections"
+  value: "*=0"
+  version: "9.0.6"
+  tags:
+  - "util"
+  - "util.httpClient"
+- key: "util.httpClientv2.connectionInactiveValidate"
+  # Specifies the period of inactivity in milliseconds after which pooled connections must be re-validated prior to being reused. Value is in seconds.
+  value: "*=2"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.connectionTimeToLive"
+  # Specifies the maximum time a connection stays open. After which it automatically closes. Value is in seconds.
+  value: "*=0"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.connectTimeout"
+  # Specifies the timeout for establishing a connection with the remote host. Value is in seconds.
+  value: "*=5"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.defaultSSLProtocol"
+  # Specifies the default SSL protocol configuration that HTTPS connections in HTTP client uses.
+  value: "TLSv1.2" # Default TLS (all versions)
+  version: "10.0.2"
+  tags:
+  - "util"
+- key: "util.httpClientv2.defaultTrustStore"
+  value: "{{ rtss_util_httpClient_defaultTrustStore }}"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.disableAutoRetries"
+  # Specifies whether or not to disable automatic request recovery and re-execution.
+  value: "*=false"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.disablePublicSuffixVerification"
+  # Specifies whether or not to disable hostname verification using the list of valid public suffixes.
+  value: "*=true" # Default false for every host (*=false)
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.disableRedirectHandling"
+  # Specifies whether or not the HTTP Client automatically handles redirects.
+  value: "*=false"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.enableHostNameVerification"
+  # Specifies whether or not to enable hostname verification.
+  value: "localhost:443=false,*=true" # Default true for every host (*=true).
+  version: "10.0.2"
+  tags:
+  - "util"
+- key: "util.httpClientv2.getConnectionTimeout"
+  # Specifies the timeout for retrieving a connection from the connection pool. Value is in seconds.
+  value: "*=5"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.maxConnections"
+  # Specifies the maximum number of connections that are created in each connection pool.
+  value: "{{ rtss_util_httpClientv2_maxConnections }}"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.maxRouteConnections"
+  # Specifies the maximum number of connections in a connection pool that are available for each unique route.
+  value: "*=20"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.proxyHost"
+  # Specifies the hostname of the proxy server if requests must go through a proxy.
+  value: ""
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.proxyPort"
+  # Specifies the port of the proxy server if requests must go through a proxy.
+  # Data type: Integer
+  value: ""
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.proxyProtocol"
+  # Specifies the protocol for the proxy server if requests must go through a proxy.
+  value: "http" # Default http, http or https
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"
+- key: "util.httpClientv2.socketTimeout"
+  # Specifies the timeout to wait for packets to arrive on an established connection. Value is in seconds.
+  value: "{{ rtss_util_httpClientv2_socketTimeout }}"
+  version: "10.0.2"
+  tags:
+  - "util"
+  - "util.httpClientv2"

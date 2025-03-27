@@ -1,0 +1,45 @@
+---
+# isamva/roles/rtss/vars/main/rtss_hvdb_cleanup.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_hvdb_cleanup:
+- key: "deviceRegistration.cleanupThread.batchSize"
+  value: "1000"
+  tags:
+  - "deviceRegistration"
+  - "hvdb_cleanup"
+- key: "distributedMap.cleanupWait"
+  # This can be set to 0 for ISAM 9.0.6 and 10000 on cleanup node/master
+  value: "{{ rtss_distributedMap_cleanupWait }}"
+  tags:
+  - "distributedMap"
+  - "hvdb_cleanup"
+- key: "session.dbCleanupInterval"
+  # set to 43200 in cleanup node/master host file
+  value: "{{ rtss_session_dbCleanupInterval }}"
+  tags:
+  - "session"
+  - "hvdb_cleanup"
+- key: "authsvc.stateMgmt.HVDB.cleanupOnlyOnPrimaryMaster"
+  value: "true"
+  deprecated: "10.0.2.0"
+  tags:
+  - "authsvc"
+  - "hvdb_cleanup"
+- key: "authsvc.stateMgmt.HVDB.cleanupThread.batchSize"
+  # Should be set to 1000 for best performance
+  value: "{{ rtss_authsvc_stateMgmt_HVDB_cleanupThread_batchSize }}"
+  deprecated: "10.0.2.0"
+  tags:
+  - "authsvc"
+  - "hvdb_cleanup"
+- key: "authsvc.stateMgmt.HVDB.cleanupWait"
+  # set to 120 on cleanup node or cleanup master in cluster.
+  # Keep in mind we will have multiple clusters and standalone AAC for HVDB, so default is disabled.
+  value: "{{ rtss_authsvc_stateMgmt_HVDB_cleanupWait }}"
+  deprecated: "10.0.2.0"
+  tags:
+  - "authsvc"
+  - "hvdb_cleanup"
+

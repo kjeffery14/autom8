@@ -1,0 +1,51 @@
+---
+# isamva/roles/rtss/vars/main/rtss_attribute_collection.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_attribute_collection:
+- key: "attributeCollection.attributesHashEnabled"
+  value: ""
+  version: "10.0.2"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.authenticationContextAttributes" # Maximum Length 200
+  value: "{{ rtss_attributeCollection_authenticationContextAttributes }}"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.cookieName"
+  value: "{{ rtss_attributeCollection_cookieName }}"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.enableGetAttributes"
+  value: "{{ rtss_attributeCollection_enableGetAttributes }}"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.getAttributesAllowedClients"
+  value: ""
+  version: "10.0.2"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.hashAlgorithm"
+  # Default is SHA-256 in 9.0.7.1.  Valid values: SHA-1, SHA-256, SHA-512
+  value: "{{ rtss_attributeCollection_hashAlgorithm }}"
+  version: "10.0.3.1"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.hashedAuthenticationContextAttributes"
+  value: "{{ rtss_attributeCollection_hashedAuthenticationContextAttributes }}"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.requestServer"
+  value: "{{ rtss_attributeCollection_requestServer }}"
+  version: "10.0.3.1"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.serviceLocation"
+  value: "{{ rtss_attributeCollection_serviceLocation }}"
+  tags:
+  - "attributeCollection"
+- key: "attributeCollection.sessionTimeout"
+  value: "{{ rtss_attributeCollection_sessionTimeout }}"
+  tags:
+  - "attributeCollection"

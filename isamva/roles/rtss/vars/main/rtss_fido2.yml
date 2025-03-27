@@ -1,0 +1,19 @@
+---
+# isamva/roles/rtss/vars/main/rtss_fido2.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_fido2_relyingPartyOptions:
+  impersonationGroup: "{{ rtss_fido2_impersonationGroup }}"
+  webauthnSpecEnforcement: "{{ rtss_fido2_webauthnSpecEnforcement }}"
+rtss_fido2_fidoServerOptions:
+  origins: "{{ rtss_fido2_origins }}"
+  metadataSet: []
+  metadataSoftFail: true
+  attestation: 
+    statementTypes: "{{ rtss_fido2_attestation_statementTypes }}"
+    statementFormats: "{{ rtss_fido2_attestation_statementFormats }}"
+    publicKeyAlgorithms: "{{ rtss_fido2_attestation_publicKeyAlgorithms }}"
+  android-safetynet: 
+    attestationMaxAge: "{{ rtss_fido2_android_attestationMaxAge }}"
+    clockSkew: "{{ rtss_fido2_android_clockSkew }}"
