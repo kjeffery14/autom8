@@ -5,7 +5,7 @@
 
 ### Authentication Mechanisms Configuration
 - block:
-  - name: ISAM RTSS Mapping Rules
+  - name: ISAM RTSS Authentication Mechanisms
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.authentication.mechanisms.set
       isamapi:
