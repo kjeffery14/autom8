@@ -113,6 +113,17 @@
 #   - rtss
 #   - scim_configuration
 
+- name: Mapping Rules
+  ansible.builtin.include_tasks: mapping_rules.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_mapping_rules_list is defined
+    - rtss_mapping_rules_list | select_attr('state', 'eq', 'present') | length > 0
+  tags:
+  - rtss
+  - mapping_rules
+  
+
 # - name: Authentication Mechanisms
 #   ansible.builtin.include_tasks: authentication_mechanisms.yml
 #   when:
