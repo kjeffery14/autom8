@@ -1,0 +1,29 @@
+---
+# isamva/roles/rtss/tasks/user_registry.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+### RTSS Users
+- block:
+  - name: Add RTSS Users
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.user_registry.user.add
+      isamapi:
+        id: "{{ item.name }}"
+        password: "{{ item.password }}"
+        groups: 
+        - adminGroup
+    loop: "{{ rtss_user_registry_list }}"
+    loop_control:
+      label: "Add RTSS user: {{ item.name }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+  always:
+  - meta: flush_handlers
+
+  when:
+    - rtss_user_registry_list is defined
+    - rtss_user_registry_list | length > 0
+  tags: always
+### End: RTSS Users

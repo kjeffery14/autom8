@@ -41,6 +41,9 @@
   - rtss
   - interfaces
 
+- meta: flush_handlers
+  tags: always
+
 # - name: Point of Contact Profiles
 #   ansible.builtin.include_tasks: poc_profiles.yml
 #   when:
@@ -84,11 +87,11 @@
 #   - rtss
 #   - risk_profile
 
-# - name: User Registry
-#   ansible.builtin.include_tasks: user_registry.yml
-#   tags:
-#   - rtss
-#   - user_registry
+- name: User Registry
+  ansible.builtin.include_tasks: user_registry.yml
+  tags:
+  - rtss
+  - user_registry
 
 # - name: Server Connections
 #   ansible.builtin.include_tasks: server_connections.yml
