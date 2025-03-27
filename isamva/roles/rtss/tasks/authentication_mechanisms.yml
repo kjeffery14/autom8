@@ -3,7 +3,7 @@
 # @version v2025.3.27.0
 # @author Kevin Jeffery
 
-### Mapping Rules Configuration
+### Authentication Mechanisms Configuration
 - block:
   - name: ISAM RTSS Mapping Rules
     ibm.isam.isam:
