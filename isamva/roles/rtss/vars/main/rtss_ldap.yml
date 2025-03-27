@@ -1,0 +1,9 @@
+---
+# isamva/roles/rtss/vars/rtss_ldap.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+rtss_ldap_connection_manager:
+  maxPoolSize: 10
+  connectTimeout: 15
+  idleTimeout: 600

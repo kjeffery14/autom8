@@ -93,16 +93,16 @@
   - rtss
   - user_registry
 
-# - name: Server Connections
-#   ansible.builtin.include_tasks: server_connections.yml
-#   when:
-#     - ret_master.data.is_master | bool
-#   tags:
-#   - rtss
-#   - isam_runtime_connections
-#   - ldap_connections
-#   - server_connections
-#   - web_service_connections
+- name: Server Connections
+  ansible.builtin.include_tasks: server_connections.yml
+  when:
+    - ret_master.data.is_master | bool
+  tags:
+  - rtss
+  - isam_runtime_connections
+  - ldap_connections
+  - server_connections
+  - web_service_connections
 
 # - name: SCIM Configuration
 #   ansible.builtin.include_tasks: scim_configuration.yml
