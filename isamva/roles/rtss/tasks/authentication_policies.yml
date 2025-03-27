@@ -1,0 +1,48 @@
+---
+# isamva/roles/rtss/tasks/authentication_policies.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+### Authentication Policies Configuration
+- block:
+  - name: ISAM RTSS Authentication Policies - Import
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.authentication.policies.set_file
+      isamapi:
+        name: "{{ item.name }}"
+        uri: "{{ item.uri }}"
+        description: "{{ item.description | default(omit) }}"
+        dialect: "{{ item.dialect | default(omit) }}"
+        enabled: "{{ item.enabled | default(omit) }}"
+        formatting: "{{ item.formatting | default(omit) }}"
+        policy_file: "{{ rtss_authentication_policies_dir }}/{{ item.filename }}"
+    loop_control:
+      label: "{{ item.name }}"
+    loop: "{{ rtss_authentication_policies_list | selectattr('state', 'eq', 'present') }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when:
+      - rtss_authentication_policies_list | selectattr('state', 'eq', 'present') | length > 0
+- block:
+  - name: ISAM RTSS Authentication Policies - Activate
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.authentication.policies.activate
+      isamapi:
+        name: "{{ item.name }}"
+        enabled: "{{ item.enabled | default(omit) }}"
+    loop_control:
+      label: "{{ item.name }}"
+    loop: "{{ rtss_authentication_policies_list | selectattr('state', 'eq', 'activated') }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when:
+      - rtss_authentication_policies_list | selectattr('state', 'eq', 'activated') | length > 0
+
+  always:
+  - meta: flush_handlers
+    tags: always
+
+  tags: always
+### End: Mapping Rules Configuration

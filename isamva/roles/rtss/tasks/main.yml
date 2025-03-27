@@ -117,6 +117,16 @@
   - authentication_mechanisms
   - rtss
 
+- name: Authentication Policies
+  ansible.builtin.include_tasks: authentication_policies.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_authentication_policies_list is defined
+    - rtss_authentication_policies_list | length > 0
+  tags:
+  - authentication_policies
+  - rtss
+
 # - name: MMFA Configuration
 #   ansible.builtin.include_tasks: mmfa_configuration.yml
 #   when:
