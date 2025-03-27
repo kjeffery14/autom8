@@ -106,16 +106,16 @@
   tags:
   - rtss
   - mapping_rules
-  
 
-# - name: Authentication Mechanisms
-#   ansible.builtin.include_tasks: authentication_mechanisms.yml
-#   when:
-#     - ret_master.data.is_master | bool
-#   tags:
-#   - authentication_mechanisms
-#   - rtss
-#   - macotp_configuration
+- name: Authentication Mechanisms
+  ansible.builtin.include_tasks: authentication_mechanisms.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_authentication_mechanisms_list is defined
+    - rtss_authentication_mechanisms_list | selectattr('state', 'eq', 'present') | length > 0
+  tags:
+  - authentication_mechanisms
+  - rtss
 
 # - name: MMFA Configuration
 #   ansible.builtin.include_tasks: mmfa_configuration.yml
