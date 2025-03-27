@@ -88,14 +88,14 @@
   - server_connections
   - web_service_connections
 
-# - name: SCIM Configuration
-#   ansible.builtin.include_tasks: scim_configuration.yml
-#   when:
-#     - ret_master.data.is_master | bool
-#     - config_rtss_scim_isam_user.ldap_connection is defined or config_rtss_scim_user_profile.ldap_connection is defined
-#   tags:
-#   - rtss
-#   - scim_configuration
+- name: SCIM Configuration
+  ansible.builtin.include_tasks: scim_configuration.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_scim_config is defined
+  tags:
+  - rtss
+  - scim_configuration
 
 - name: Mapping Rules
   ansible.builtin.include_tasks: mapping_rules.yml

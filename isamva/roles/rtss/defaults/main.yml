@@ -88,6 +88,11 @@ rtss_runtime_session_reaper_poll_interval: '30'
 rtss_runtime_trace_specification: "com.tivoli.am.fim.trustserver.sts.utilities.IDMappingExtUtils=SEVERE"
 rtss_runtime_truststore: "{{ rtss_default_keystore_name }}"
 rtss_runtime_verificationHashAlgorithms: SHA-256
+rtss_scim_user_profile_ldap_object_classes:
+- top
+- person
+- organizationalPerson
+- inetOrgPerson
 rtss_session_dbCleanupInterval: "0"
 rtss_session_store: "{{ 'DSC' if rtss_distributedSessionCache_enabled | bool  else 'DMap' }}"
 rtss_sps_adminGroup: ''
