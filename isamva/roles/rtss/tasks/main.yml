@@ -93,6 +93,7 @@
   when:
     - ret_master.data.is_master | bool
     - rtss_scim_config is defined
+    - rtss_scim_config.keys() | length > 0
   tags:
   - rtss
   - scim_configuration
