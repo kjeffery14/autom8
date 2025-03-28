@@ -1,0 +1,29 @@
+---
+# /roles/config_junctions/tasks/add_servers.yml
+# @version v1.04 - 2020-NOV-10
+# @author kjeffery@ca.ibm.com
+# @author jason.chao@bmo.com
+
+- name: Add Additional Servers - {{ junction_item.name }}
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.reverse_proxy.junctions_server.add
+    isamapi:
+      reverseproxy_id:        "{{ isamva_proxy_name }}"
+      junction_point:         "{{ junction_item.name }}"
+      junction_type:          "{{ junction_item.juctype }}"
+      server_hostname:        "{{ item.host }}"
+      server_port:            "{{ item.port }}"
+      server_dn:              "{{ item.server_dn | default(omit) }}"
+      server_uuid:            "{{ item.host + ':' + item.port | uuid }}"
+      virtual_hostname:       "{{ item.virtual_hostname | default(omit) }}"
+      query_contents:         "{{ junction_item.urlqc | default(omit) }}"
+      case_sensitive_url:     "{{ junction_item.caseins | default(item.caseins) | default(omit) }}"
+      windows_style_url:      "{{ junction_item.win32sup | default(item.win32sup) | default(omit) }}"
+      https_port:             "{{ junction_item.https_port | default(omit) }}"
+      http_port:              "{{ junction_item.http_port | default(omit) }}"
+      proxy_hostname:         "{{ junction_item.proxy_hostname | default(omit) }}"
+      proxy_port:             "{{ junction_item.proxy_port | default(omit) }}"
+      sms_environment:        "{{ junction_item.sms_environment | default(omit) }}"
+      vhost_label:            "{{ junction_item.vhost_label | default(omit) }}"
+  ignore_errors: true
+  tags: always
