@@ -1,6 +1,6 @@
 ---
 # isamva/roles/rtss/tasks/server_connections.yml
-# @version v2025.3.27.0
+# @version v2025.3.28.0
 # @author Kevin Jeffery
 
 ### Configure Server Connections
@@ -12,7 +12,7 @@
         connection: "{{ item.connection }}"
         description: "{{ item.description }}"
         ignore_password_for_idempotency: True
-        locked: "{{ item.locked | default('false') }}"
+        locked: "{{ item.locked | default(omit) }}"
         name: "{{ item.name }}"
     loop: "{{ rtss_server_connections.ws }}"
     loop_control:
