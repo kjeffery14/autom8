@@ -9,20 +9,23 @@
   register: ret_cluster_info
   tags: always
 
-- name: Create New Cluster
-  ibm.isam.isam:
-    action: ibmsecurity.isam.base.cluster.configuration.set
-    isamapi:
-      primary_master: "{{ isamva_cluster_config.primary_master }}"
-      first_port: "{{ isamva_cluster_config.first_port | default(omit) }}"
-      hvdb_max_size: "{{ isamva_cluster_config.hvdb_max_size | default(40) }}"
+### Create New Cluster
+- block:
+  - name: Create New Cluster
+    ibm.isam.isam:
+      action: ibmsecurity.isam.base.cluster.configuration.set
+      isamapi:
+        primary_master: "{{ isamva_cluster_config.primary_master }}"
+        first_port: "{{ isamva_cluster_config.first_port | default(omit) }}"
+        hvdb_max_size: "{{ isamva_cluster_config.hvdb_max_size | default(40) }}"
+    notify: Commit Changes and Restart
+
+  - meta: flush_handlers
   when:
     - ret_cluster_info.data.primary_master == '127.0.0.1'
     - "'primary' in isamva_server_roles"
-  notify: Commit Changes and Restart
   tags: always
-
-- meta: flush_handlers
+### End: Create New Cluster
 
 - name: Configure Runtime Replication
   ibm.isam.isam:
@@ -38,6 +41,9 @@
     isamapi:
       replicating: "{{ isamva_cluster_config.ssl_certificates_replication }}"
   when: isamva_cluster_config.ssl_certificates_replication is defined
+  tags: always
+
+- meta: flush_handlers
   tags: always
 
 - name: Configure DSC, HVDB and CFGDB
@@ -83,3 +89,4 @@
   tags: always
 
 - meta: flush_handlers
+  tags: always
