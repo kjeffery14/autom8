@@ -53,12 +53,12 @@
       ltpa_keyfile_password:            "{{ junction_item.ltpa_keyfile_password | default(omit, true) }}"
       delegation_support:               "{{ junction_item.delegation_support | default(omit, true) }}"
       insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
-  loop: "{{ isamva_proxy_junctions | select_attr('state', 'eq', 'present') }}"
+  loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
   loop_control:
     loop_var: junction_item
   register: ret_junction_add
   when:
-    - isamva_proxy_junctions | select_attr('state', 'eq', 'present') | length > 0
+    - isamva_proxy_junctions | selectattr('state', 'eq', 'present') | length > 0
     - junction_item.server != ''
   ignore_errors: true
   tags: always
