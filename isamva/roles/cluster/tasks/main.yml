@@ -1,0 +1,85 @@
+---
+# isamva/roles/cluster/tasks/main.yml
+# @version v2025.3.28.0
+# @author Kevin Jeffery
+
+- name: Get current configuration
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.configuration.get
+  register: ret_cluster_info
+  tags: always
+
+- name: Create New Cluster
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.configuration.set
+    isamapi:
+      primary_master: "{{ cluster_config.primary_master }}"
+      first_port: "{{ cluster_config.first_port | default(omit) }}"
+      hvdb_max_size: "{{ cluster_config.hvdb_max_size | default(40) }}"
+  when:
+    - ret_cluster_info.data.primary_master == '127.0.0.1'
+    - "'primary' in isamva_server_roles"
+  notify: Commit Changes and Restart
+  tags: always
+
+- meta: flush_handlers
+
+- name: Configure Runtime Replication
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.runtime.replication.set
+    isamapi:
+      replicating: "{{ cluster_config.runtime_replication }}"
+  when: cluster_config.runtime_replication is defined
+  tags: always
+
+- name: Configure SSL Certificate Replication
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.ssl_certificates.replication.set
+    isamapi:
+      replicating: "{{ cluster_config.ssl_certificates_replication }}"
+  when: cluster_config.ssl_certificates_replication is defined
+  tags: always
+
+- name: Configure DSC, HVDB and CFGDB
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.configuration.set
+    # log: "DEBUG"
+    isamapi:
+      primary_master: "{{ cluster_config.primary_master }}"
+      secondary_master: "{{ cluster_config.secondary_master | default(omit) }}"
+      master_ere: "{{ cluster_config.master_ere | default(omit) }}"
+      tertiary_master: "{{ cluster_config.tertiary_master | default(omit) }}"
+      quaternary_master: "{{ cluster_config.quaternary_master | default(omit) }}"
+      first_port: "{{ cluster_config.first_port | default(omit) }}"
+      dsc_client_grace_period: "{{ cluster_config.dsc_client_grace_period | default(600) }}"
+      dsc_external_clients: "{{ cluster_config.dsc_external_clients | default(false) }}"
+      dsc_port: "{{ cluster_config.dsc_port | default(omit) }}"
+      dsc_maximum_session_lifetime: "{{ cluster_config.dsc_maximum_session_lifetime | default(3600) }}"
+      dsc_worker_threads: "{{ cluster_config.dsc_worker_threads| default(64) }}"
+      dsc_use_ssl: "{{ cluster_config.dsc_use_ssl | default(omit) }}"
+      dsc_ssl_keyfile: "{{ cluster_config.dsc_ssl_keyfile | default(omit) }}"
+      dsc_ssl_label: "{{ cluster_config.dsc_ssl_label | default(omit) }}"
+      hvdb_embedded: "{{ cluster_config.hvdb_embedded | default(omit) }}"
+      hvdb_max_size: "{{ cluster_config.hvdb_max_size | default(40) }}"
+      hvdb_db_type: "{{ cluster_config.hvdb_db_type | default(omit) }}"
+      hvdb_address: "{{ cluster_config.hvdb_address | default(omit) }}"
+      hvdb_port: "{{ cluster_config.hvdb_port | default(omit) }}"
+      hvdb_user: "{{ cluster_config.hvdb_user | default(omit) }}"
+      hvdb_password: "{{ cluster_config.hvdb_password | default(omit) }}"
+      hvdb_db_name: "{{ cluster_config.hvdb_db_name | default(omit) }}"
+      hvdb_db_secure: "{{ cluster_config.hvdb_db_secure | default(omit) }}"
+      cfgdb_embedded: "{{ cluster_config.cfgdb_embedded | default(omit) }}"
+      cfgdb_db_type: "{{ cluster_config.cfgdb_db_type | default(omit) }}"
+      cfgdb_address: "{{ cluster_config.cfgdb_address | default(omit) }}"
+      cfgdb_port: "{{ cluster_config.cfgdb_port | default(omit) }}"
+      cfgdb_user: "{{ cluster_config.cfgdb_user | default(omit) }}"
+      cfgdb_password: "{{ cluster_config.cfgdb_password | default(omit) }}"
+      cfgdb_db_name: "{{ cluster_config.cfgdb_db_name | default(omit) }}"
+      cfgdb_db_secure: "{{ cluster_config.cfgdb_db_secure | default(omit) }}"
+      ignore_password_for_idempotency: True
+  notify: 
+  - Commit Changes and Restart
+  - Restart AAC Runtime
+  tags: always
+
+- meta: flush_handlers
