@@ -35,7 +35,7 @@
         name: "{{ item.name }}"
         description: "{{ item.description | default(omit) }}"
         connection: "{{ item.connection }}"
-        locked: "{{ item.locked | default('false') }}"
+        locked: "{{ item.locked | default(omit) }}"
     loop: "{{ rtss_server_connections.isamruntime }}"
     loop_control:
       label: "{{ item.name }}"
@@ -59,7 +59,7 @@
         connectionManager: "{{ item.connectionManager | default(rtss_ldap_connection_manager) }}"
         description: "{{ item.description | default(omit) }}"
         ignore_password_for_idempotency: True
-        locked: "{{ item.locked | default('false') }}"
+        locked: "{{ item.locked | default(omit) }}"
         name: "{{ item.name }}"
         servers: "{{ item.servers | default(omit) }}"
     loop: "{{ rtss_server_connections.ldap }}"
