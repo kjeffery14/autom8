@@ -32,13 +32,13 @@
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.scim.user_profile.set
       isamapi:
-        connection_type: ldap
+        # connection_type: ldap
         enforce_password_policy: "{{ rtss_scim_config.user_profile.enforce_password_policy | default(omit) }}"
         ldap_connection: "{{ rtss_scim_config.user_profile.ldap_connection }}"
         ldap_object_classes: "{{ rtss_scim_config.user_profile.ldap_object_classes | default(rtss_scim_user_profile_ldap_object_classes) }}"
         mappings: "{{ rtss_scim_config.user_profile.mappings }}"
         search_suffix: "{{ rtss_scim_config.user_profile.search_suffix | default(rtss_scim_config.user_profile.user_suffix) }}"
-        user_dn: "{{ rtss_scim_config.user_profile.user_dn | default('uid') }}"
+        # user_dn: "{{ rtss_scim_config.user_profile.user_dn | default('uid') }}"
         # user_id: "{{ rsss_scim_config.user_profile.user_id | default('uid') }}"
         user_suffix: "{{ rtss_scim_config.user_profile.user_suffix }}"
     when: rtss_scim_config.user_profile is defined
