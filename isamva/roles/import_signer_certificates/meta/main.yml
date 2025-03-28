@@ -3,7 +3,7 @@
 galaxy_info:
   author: Kevin Jeffery
   description: Role to apply Import Signer Certificates
-  company: IBM
+  company: MicroKnight
 
   license: Apache
 

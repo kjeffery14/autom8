@@ -3,7 +3,7 @@
 galaxy_info:
   author: Kevin Jeffery
   description: Role to apply ISVA Reverse Proxy configuration
-  company: IBM
+  company: MicroKnight
 
   license: Apache
 
