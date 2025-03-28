@@ -10,7 +10,11 @@
       isamapi:
         enable_header_authentication: "{{ rtss_scim_config.general.enable_header_authentication | default(omit) }}"
         enable_authz_filter: "{{ rtss_scim_config.general.enable_authz_filter | default(omit) }}"
-        admin_group: "{{  }}"
+        admin_group: "{{ rtss_scim_config.general.admin_group | default(omit) }}"
+    when: rtss_scim_config.general is defined
+    notify:
+    - Commit Changes
+
   - name: SCIM ISAM User Configuration
     ibm.isam.isam:
       action: ibmsecurity.isam.aac.scim.update_isam_user
@@ -18,7 +22,6 @@
         isam_domain: "{{ rtss_scim_config.isam_user.isam_domain | default('Default') }}"
         ldap_connection: "{{ rtss_scim_config.isam_user.ldap_connection }}"
         update_native_users: "{{ rtss_scim_config.isam_user.update_native_users | default('false') }}"
-    register: ret_out
     when:
       - rtss_scim_config.isam_user is defined
       - rtss_scim_config.isam_user.ldap_connection is defined
