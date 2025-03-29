@@ -28,4 +28,6 @@
   loop: "{{ junction_item.servers }}"
   loop_control:
     label: "{{ item.host }}:{{ item.port }}"
+  vars:
+    ansible_command_timeout: 120
   tags: always

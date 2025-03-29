@@ -68,7 +68,7 @@
   when:
     - isamva_proxy_junctions | selectattr('state', 'eq', 'present') | length > 0
     - junction_item.server != ''
-  # ignore_errors: true
+  ignore_errors: true
   tags: always
 
 - name: Replace Junctions - {{ isamva_proxy_name }}
@@ -131,7 +131,7 @@
   when:
     - isamva_proxy_junctions | selectattr('state', 'eq', 'replace') | length > 0
     - junction_item.server != ''
-  # ignore_errors: true
+  ignore_errors: true
   tags: always
 
 - name: Add Additional Servers
