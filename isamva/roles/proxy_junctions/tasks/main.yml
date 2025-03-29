@@ -147,6 +147,6 @@
     label: "{{ junction_item.name }}"
     loop_var: junction_item
   when:
-    - junction_item.state == 'replace' or (add_junction_status.changed | default(false))
+    - junction_item.state == 'replace' or (ret_junction_add.changed | default(false))
     - junction_item.servers | default([]) | length > 0
   tags: always
