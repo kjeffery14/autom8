@@ -144,7 +144,7 @@
   include_tasks: "add_servers.yml"
   loop: "{{ isamva_proxy_junctions }}"
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ junction_item.name }}"
     loop_var: junction_item
   when:
     - junction_item.state == 'replace' or (add_junction_status.changed | default(false))
