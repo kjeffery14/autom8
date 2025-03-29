@@ -24,10 +24,14 @@
       proxy_port:             "{{ junction_item.proxy_port | default(omit) }}"
       sms_environment:        "{{ junction_item.sms_environment | default(omit) }}"
       vhost_label:            "{{ junction_item.vhost_label | default(omit) }}"
+  failed_when:
+    - ret_server_add.rc > 0
+    - "'DPWWA1222E' not in ret_server_add.message"
   ignore_errors: true
   loop: "{{ junction_item.servers }}"
   loop_control:
     label: "{{ item.host }}:{{ item.port }}"
+  register: ret_server_add
   vars:
     ansible_command_timeout: 120
   tags: always
