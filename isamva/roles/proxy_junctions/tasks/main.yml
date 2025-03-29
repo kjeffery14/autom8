@@ -8,7 +8,7 @@
     msg: "{{ isamva_proxy_junctions }}"
   tags: debug
 
-- name: Add a Junctions - {{ isamva_proxy_name }}
+- name: Add Junctions - {{ isamva_proxy_name }}
   ibm.isam.isam:
     action: ibmsecurity.isam.web.reverse_proxy.junctions.add
     isamapi:
