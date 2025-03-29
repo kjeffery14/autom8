@@ -58,6 +58,9 @@
       ltpa_keyfile_password:            "{{ junction_item.ltpa_keyfile_password | default(omit, true) }}"
       delegation_support:               "{{ junction_item.delegation_support | default(omit, true) }}"
       insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
+  failed_when:
+    - ret_junction_add.rc > 0
+    - "'DPWWA1222E' not in ret_junction_add.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
   loop_control:
     label: "{{ junction_item.name }}"
@@ -121,6 +124,9 @@
       ltpa_keyfile_password:            "{{ junction_item.ltpa_keyfile_password | default(omit, true) }}"
       delegation_support:               "{{ junction_item.delegation_support | default(omit, true) }}"
       insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
+  failed_when:
+    - ret_junction_replace.rc > 0
+    - "'DPWWA1222E' not in ret_junction_replace.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'replace') }}"
   loop_control:
     label: "{{ junction_item.name }}"
