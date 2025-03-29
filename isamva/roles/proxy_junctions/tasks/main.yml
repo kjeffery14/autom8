@@ -14,9 +14,9 @@
     isamapi:
       reverseproxy_id:                  "{{ isamva_proxy_name }}"
       junction_point:                   "{{ junction_item.name }}"
-      junction_type:                    "{{ junction_item.juctype | default ('tcp') }}"
       server_hostname:                  "{{ junction_item.server.host }}"
-      server_port:                      "{{ junction_item.server.server_port | default(omit, true) }}"
+      server_port:                      "{{ junction_item.server.port }}"
+      junction_type:                    "{{ junction_item.juctype | default ('tcp') }}"
       server_uuid:                      "{{ junction_item.server.host + ':' + junction_item.server.port | to_uuid }}"
       sni_name:                         "{{ junction_item.sni | default(junction_item.server.sni) | default(omit, true) }}"
       basic_auth_mode:                  "{{ junction_item.basicauth | default(omit, true) }}"
