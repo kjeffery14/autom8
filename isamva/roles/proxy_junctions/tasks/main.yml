@@ -63,7 +63,7 @@
   #   - "'DPWWA1222E' not in ret_junction_add.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
   loop_control:
-    label: "{{ junction_item.name }}"
+    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.port }}"
     loop_var: junction_item
   register: ret_junction_add
   vars:
@@ -129,7 +129,7 @@
   #   - "'DPWWA1222E' not in ret_junction_replace.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'replace') }}"
   loop_control:
-    label: "{{ junction_item.name }}"
+    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.port }}"
     loop_var: junction_item
   register: ret_junction_replace
   vars:

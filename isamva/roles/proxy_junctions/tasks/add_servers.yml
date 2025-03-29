@@ -13,7 +13,7 @@
       server_hostname:        "{{ item.host }}"
       server_port:            "{{ item.port }}"
       server_dn:              "{{ item.server_dn | default(omit) }}"
-      server_uuid:            "{{ item.host + ':' + item.port | to_uuid }}"
+      server_uuid:            "{{ (item.host + ':' + item.port) | to_uuid }}"
       virtual_hostname:       "{{ item.virtual_hostname | default(omit) }}"
       query_contents:         "{{ junction_item.urlqc | default(omit) }}"
       case_sensitive_url:     "{{ junction_item.caseins | default(item.caseins) | default(omit) }}"
