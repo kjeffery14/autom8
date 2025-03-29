@@ -118,7 +118,7 @@
     loop_var: junction_item
   register: ret_junction_replace
   when:
-    - isamva_proxy_junctions | selectattr('state', 'eq', 'replcce') | length > 0
+    - isamva_proxy_junctions | selectattr('state', 'eq', 'replace') | length > 0
     - junction_item.server != ''
   ignore_errors: true
   tags: always
@@ -127,9 +127,9 @@
   include_tasks: "add_servers.yml"
   loop: "{{ isamva_proxy_junctions }}"
   loop_control:
-    label: "{{ item.server_hostname }}"
+    label: "{{ item.name }}"
     loop_var: junction_item
   when:
-    - process_junction_state == 'replace' or add_junction_status.changed
+    - junction_item.state == 'replace' or add_junction_status.changed
     - junction_item.servers | length > 0
   tags: always
