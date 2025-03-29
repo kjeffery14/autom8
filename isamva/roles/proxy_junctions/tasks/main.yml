@@ -60,8 +60,11 @@
       insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
   loop_control:
+    label: "{{ junction_item.name }}"
     loop_var: junction_item
   register: ret_junction_add
+  vars:
+    ansible_command_timeout: 120
   when:
     - isamva_proxy_junctions | selectattr('state', 'eq', 'present') | length > 0
     - junction_item.server != ''
@@ -120,8 +123,11 @@
       insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'replace') }}"
   loop_control:
+    label: "{{ junction_item.name }}"
     loop_var: junction_item
   register: ret_junction_replace
+  vars:
+    ansible_command_timeout: 120
   when:
     - isamva_proxy_junctions | selectattr('state', 'eq', 'replace') | length > 0
     - junction_item.server != ''
