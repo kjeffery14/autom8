@@ -1,8 +1,7 @@
 ---
 # /roles/config_junctions/tasks/add_servers.yml
-# @version v1.04 - 2020-NOV-10
-# @author kjeffery@ca.ibm.com
-# @author jason.chao@bmo.com
+# @version v2025.3.24.0
+# @author Kevin Jeffery
 
 - name: Add Additional Servers - {{ junction_item.name }}
   ibm.isam.isam:
@@ -26,4 +25,7 @@
       sms_environment:        "{{ junction_item.sms_environment | default(omit) }}"
       vhost_label:            "{{ junction_item.vhost_label | default(omit) }}"
   ignore_errors: true
+  loop: "{{ junction_item.servers }}"
+  loop_control:
+    label: "{{ item.host }}:{{ item.port }}"
   tags: always
