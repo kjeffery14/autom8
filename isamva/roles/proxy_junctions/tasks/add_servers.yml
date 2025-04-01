@@ -30,7 +30,7 @@
   ignore_errors: true
   loop: "{{ junction_item.servers }}"
   loop_control:
-    label: "{{ junction_item.name }}:{{ item.server_hostname }}:{{ item.port }}"
+    label: "{{ junction_item.name }}:{{ item.server_hostname }}:{{ item.server_port }}"
   register: ret_server_add
   vars:
     ansible_command_timeout: 120
