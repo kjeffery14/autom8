@@ -1,6 +1,6 @@
 ---
 # /roles/config_junctions/tasks/add_servers.yml
-# @version v2025.3.24.0
+# @version v2025.3.31.0
 # @author Kevin Jeffery
 
 - name: Add Additional Servers - {{ junction_item.name }}
@@ -9,15 +9,15 @@
     isamapi:
       reverseproxy_id:        "{{ isamva_proxy_name }}"
       junction_point:         "{{ junction_item.name }}"
-      junction_type:          "{{ junction_item.juctype }}"
-      server_hostname:        "{{ item.host }}"
-      server_port:            "{{ item.port }}"
+      junction_type:          "{{ junction_item.junction_type }}"
+      server_hostname:        "{{ item.server_hostname }}"
+      server_port:            "{{ item.server_port }}"
       server_dn:              "{{ item.server_dn | default(omit) }}"
-      server_uuid:            "{{ (item.host + ':' + item.port) | to_uuid }}"
+      server_uuid:            "{{ (item.server_hostname + ':' + item.server_port) | to_uuid }}"
       virtual_hostname:       "{{ item.virtual_hostname | default(omit) }}"
-      query_contents:         "{{ junction_item.urlqc | default(omit) }}"
-      case_sensitive_url:     "{{ junction_item.caseins | default(item.caseins) | default(omit) }}"
-      windows_style_url:      "{{ junction_item.win32sup | default(item.win32sup) | default(omit) }}"
+      query_contents:         "{{ junction_item.query_contents | default(omit) }}"
+      case_sensitive_url:     "{{ junction_item.case_sensitive_url | default(item.caseins) | default(omit) }}"
+      windows_style_url:      "{{ junction_item.windows_style_url | default(item.win32sup) | default(omit) }}"
       https_port:             "{{ junction_item.https_port | default(omit) }}"
       http_port:              "{{ junction_item.http_port | default(omit) }}"
       proxy_hostname:         "{{ junction_item.proxy_hostname | default(omit) }}"
@@ -30,7 +30,7 @@
   ignore_errors: true
   loop: "{{ junction_item.servers }}"
   loop_control:
-    label: "{{ junction_item.name }}:{{ item.host }}:{{ item.port }}"
+    label: "{{ junction_item.name }}:{{ item.server_hostname }}:{{ item.port }}"
   register: ret_server_add
   vars:
     ansible_command_timeout: 120
