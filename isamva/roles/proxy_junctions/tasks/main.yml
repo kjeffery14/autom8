@@ -63,7 +63,7 @@
   #   - "'DPWWA1222E' not in ret_junction_add.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
   loop_control:
-    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.server_port }}"
+    label: "{{ junction_item.name }}:{{ junction_item.server.server_hostname }}:{{ junction_item.server.server_port }}"
     loop_var: junction_item
   register: ret_junction_add
   vars:
@@ -83,7 +83,7 @@
       junction_type:                    "{{ junction_item.junction_type | default('tcp') }}"
       server_hostname:                  "{{ junction_item.server.server_hostname }}"
       server_port:                      "{{ junction_item.server.server_port }}"
-      server_uuid:                      "{{ (junction_item.server.host + ':' + junction_item.server.server_port) | to_uuid if junction_item.servers | length > 0 else omit }}"
+      server_uuid:                      "{{ (junction_item.server.server_hostname + ':' + junction_item.server.server_port) | to_uuid if junction_item.servers | length > 0 else omit }}"
       virtual_hostname:                 "{{ junction_item.server.virtual_hostname | default(omit, true) }}"
       sni_name:                         "{{ junction_item.sni_name | default(junction_item.server.sni_name) | default(omit, true) }}"
       basic_auth_mode:                  "{{ junction_item.basic_auth_mode | default(omit, true) }}"
@@ -129,7 +129,7 @@
   #   - "'DPWWA1222E' not in ret_junction_replace.message"
   loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'replace') }}"
   loop_control:
-    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.server_port }}"
+    label: "{{ junction_item.name }}:{{ junction_item.server.server_hostname }}:{{ junction_item.server.server_port }}"
     loop_var: junction_item
   register: ret_junction_replace
   vars:
