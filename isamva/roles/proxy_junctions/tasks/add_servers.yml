@@ -17,7 +17,7 @@
       virtual_hostname:       "{{ item.virtual_hostname | default(omit) }}"
       query_contents:         "{{ junction_item.query_contents | default(omit) }}"
       case_sensitive_url:     "{{ junction_item.case_sensitive_url | default(item.caseins) | default(omit) }}"
-      windows_style_url:      "{{ junction_item.windows_style_url | default(item.win32sup) | default(omit) }}"
+      windows_style_url:      "{{ junction_item.windows_style_url | default(item.windows_style_url) | default(omit) }}"
       https_port:             "{{ junction_item.https_port | default(omit) }}"
       http_port:              "{{ junction_item.http_port | default(omit) }}"
       proxy_hostname:         "{{ junction_item.proxy_hostname | default(omit) }}"
