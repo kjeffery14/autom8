@@ -1,0 +1,139 @@
+---
+# roles/isam_config/rtss/defaults/main/rtss_util.yml
+# @version v1.02_2023-JUL-17
+# @author Kevin Jeffery
+# @contributor Mario Capistrano
+
+rtss_sps:
+- key: "sps.adminGroup"
+  value: "{{ rtss_sps_adminGroup }}"
+  version: "10.0.8" #??
+  tags:
+  - "sps"
+- key: "sps.authService.password.lastLoginLDAPAttribute"
+  value: "secPwdLastUsed" # Default
+  version: "10.0.2"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.password.pwdFailCountLDAPAttribute"
+  value: "secPwdFailures" # Default
+  version: "10.0.2"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.policyKickoffMethod"
+  value: "{{ rtss_sps_authService_policyKickoffMethod }}"
+  version: "9.0.6"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.reCAPTCHA.serviceLocation"
+  value: "https://www.google.com/recaptcha/api/siteverify"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.reauthenticationEnabled"
+  value: "true"
+  tags:
+  - "sps"
+- key: "sps.authService.stateIdSource.authsvc"
+  value: "Body and Query" # Default
+  version: "10.0.2"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.stateIdSource.apiauthsvc"
+  value: "Body and Query"
+  version: "10.0.2"
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.password.pwdFailCountLDAPAttribute"
+  value: "" # Default
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.authService.password.pwdFailCountLDAPAttribute"
+  value: "" # Default
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.authService"
+- key: "sps.doNotSendXFrameOptionsHeader"
+  value: "{{ rtss_sps_doNotSendXFrameOptionsHeader }}"
+  version: "9.0.7"
+  tags:
+  - "sps"
+- key: "sps.httpRequestClaims.enabled"
+  value: "{{ rtss_sps_httpRequestClaims_enabled }}"
+  tags:
+  - "sps"
+  - "sps.httpRequestClaims"
+- key: "sps.httpRequestClaims.filterSpec"
+  value: "cookies=*: headers=*"
+  tags:
+  - "sps"
+  - "sps.httpRequestClaims"
+- key: "sps.illegalUrlSubstrings"
+  value: ""
+  version: "9.0.6"
+  tags:
+  - "sps"
+- key: " sps.page.allowedLocales"
+  value: "all"
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.defaultLocale"
+  value: "en"
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.page"
+# - key: "sps.page.exceptionMacros"
+  # value: ""
+- key: "sps.page.hiddenMacros"
+  value: "{{ rtss_sps_page_hiddenMacros }}"
+  version: "9.0.6"
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.htmlEscapedMacros"
+  value: "{{ rtss_sps_page_htmlEscapedMacros }}"
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.jsComplileFileExtensions"
+  value: "html,json"
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.junctionMacro"
+  value: "{{ rtss_sps_page_junctionMacro }}"
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.notEscapedMacros"
+  value: "{{ rtss_sps_page_notEscapedMacros }}"
+  version: "9.0.6"
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.page.strictLocaleMatching"
+  value: "false"
+  version: "10.0.7" #??
+  tags:
+  - "sps"
+  - "sps.page"
+- key: "sps.setCookiesAsSecure"
+  value: "true"
+  tags:
+  - "sps"
+- key: "sps.targetURLWhitelist"
+  value: ".*" # Default
+  tags:
+  - "sps"

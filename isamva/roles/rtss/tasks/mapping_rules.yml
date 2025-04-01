@@ -1,0 +1,28 @@
+---
+# isamva/roles/rtss/tasks/mapping_rules.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+### Mapping Rules Configuration
+- block:
+  - name: ISAM RTSS Mapping Rules
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.mapping_rules.set
+      isamapi:
+        name: "{{ item.name }}"
+        category: "{{ item.category }}"
+        filename: "{{ item.filename }}"
+        upload_filename: "{{ rtss_mapping_rules_dir }}/{{ item.filename }}"
+    loop_control:
+      label: "{{ item.name }}"
+    loop: "{{ rtss_mapping_rules_list | selectattr('state', 'eq', 'present') }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+
+  always:
+  - meta: flush_handlers
+    tags: always
+
+  tags: always
+### End: Mapping Rules Configuration

@@ -1,0 +1,152 @@
+---
+# isamva/roles/proxy_junctions/tasks/main.yml
+# @version v2025.3.28.0
+# @author Kevin Jeffery
+
+- name: Junctions
+  ansible.builtin.debug:
+    msg: "{{ isamva_proxy_junctions }}"
+  tags: debug
+
+- name: Add Junctions - {{ isamva_proxy_name }}
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.reverse_proxy.junctions.add
+    isamapi:
+      reverseproxy_id:                  "{{ isamva_proxy_name }}"
+      junction_point:                   "{{ junction_item.name }}"
+      server_hostname:                  "{{ junction_item.server.host }}"
+      server_port:                      "{{ junction_item.server.port }}"
+      junction_type:                    "{{ junction_item.juctype | default ('tcp') }}"
+      server_uuid:                      "{{ (junction_item.server.host + ':' + junction_item.server.port) | to_uuid if junction_item.servers | length > 0 else omit }}"
+      sni_name:                         "{{ junction_item.sni | default(junction_item.server.sni) | default(omit, true) }}"
+      basic_auth_mode:                  "{{ junction_item.basicauth | default(omit, true) }}"
+      stateful_junction:                "{{ junction_item.stateful | default(omit, true) }}"
+      client_ip_http:                   "{{ junction_item.client_ip_http | default(omit, true) }}"
+      scripting_support:                "{{ junction_item.scripting_support | default(omit, true) }}"
+      junction_cookie_javascript_block: "{{ junction_item.junction_cookie_javascript_block | default(omit, true) }}"
+      virtual_hostname:                 "{{ junction_item.server.virtual_hostname | default(omit, true) }}"
+      server_dn:                        "{{ junction_item.server.server_dn | default(omit, true) }}"
+      query_contents:                   "{{ junction_item.urlqc | default(omit, true) }}"
+      case_sensitive_url:               "{{ junction_item.caseins | default(junction_item.server.caseins) | default(omit, true) }}"
+      windows_style_url:                "{{ junction_item.win32sup | default(junction_item.server.win32sup) | default(omit, true) }}"
+      https_port:                       "{{ junction_item.https_port | default(omit, true) }}"
+      http_port:                        "{{ junction_item.http_port | default(omit, true) }}"
+      proxy_hostname:                   "{{ junction_item.proxy_hostname | default(omit, true) }}"
+      proxy_port:                       "{{ junction_item.proxy_port | default(omit, true) }}"
+      sms_environment:                  "{{ junction_item.sms_environment | default(omit, true) }}"
+      vhost_label:                      "{{ junction_item.vhost_label | default(omit, true) }}"
+      junction_hard_limit:              "{{ junction_item.junction_hard_limit | default(80) }}"
+      junction_soft_limit:              "{{ junction_item.junction_soft_limit | default(60) }}"
+      tfim_sso:                         "{{ junction_item.tfim_sso | default(omit, true) }}"
+      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}"
+      preserve_cookie:                  "{{ junction_item.preserve_cookie | default(omit, true) }}"
+      cookie_include_path:              "{{ junction_item.cookie_include_path | default(omit, true) }}"
+      transparent_path_junction:        "{{ junction_item.transparentpath | default(omit, true) }}"
+      mutual_auth:                      "{{ junction_item.mutauthcert| default(omit, true) }}"
+      insert_session_cookies:           "{{ junction_item.insert_session_cookies | default(omit, true) }}"
+      request_encoding:                 "{{ junction_item.requestencoding | default(omit, true) }}"
+      enable_basic_auth:                "{{ junction_item.mutauthba | default(omit, true) }}"
+      key_label:                        "{{ junction_item.mutauthcertlabel | default(omit, true) }}"
+      gso_resource_group:               "{{ junction_item.gso_resource_group | default(omit, true) }}"
+      version_two_cookies:              "{{ junction_item.version_two_cookies | default(omit, true) }}"
+      ltpa_keyfile:                     "{{ junction_item.ltpa_keyfile | default(omit, true) }}"
+      authz_rules:                      "{{ junction_item.authz_rules | default(omit, true) }}"
+      fsso_config_file:                 "{{ junction_item.fsso_config_file | default(omit, true) }}"
+      username:                         "{{ junction_item.username | default(omit, true) }}"
+      password:                         "{{ junction_item.password | default(omit, true) }}"
+      local_ip:                         "{{ junction_item.local_ip | default(omit, true) }}"
+      ltpa_keyfile_password:            "{{ junction_item.ltpa_keyfile_password | default(omit, true) }}"
+      delegation_support:               "{{ junction_item.delegation_support | default(omit, true) }}"
+      insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
+  # failed_when:
+  #   - ret_junction_add.rc > 0
+  #   - "'DPWWA1222E' not in ret_junction_add.message"
+  loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'present') }}"
+  loop_control:
+    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.port }}"
+    loop_var: junction_item
+  register: ret_junction_add
+  vars:
+    ansible_command_timeout: 120
+  when:
+    - isamva_proxy_junctions | selectattr('state', 'eq', 'present') | length > 0
+    - junction_item.server != ''
+  ignore_errors: true
+  tags: always
+
+- name: Replace Junctions - {{ isamva_proxy_name }}
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.reverse_proxy.junctions.set
+    isamapi:
+      reverseproxy_id:                  "{{ isamva_proxy_name }}"
+      junction_point:                   "{{ junction_item.name }}"
+      junction_type:                    "{{ junction_item.juctype | default('tcp') }}"
+      server_hostname:                  "{{ junction_item.server.host }}"
+      server_port:                      "{{ junction_item.server.port }}"
+      server_uuid:                      "{{ (junction_item.server.host + ':' + junction_item.server.port) | to_uuid if junction_item.servers | length > 0 else omit }}"
+      virtual_hostname:                 "{{ junction_item.server.virtual_hostname | default(omit, true) }}"
+      sni_name:                         "{{ junction_item.sni_name | default(junction_item.server.sni_name) | default(omit, true) }}"
+      basic_auth_mode:                  "{{ junction_item.basicauth | default(omit, true) }}"
+      stateful_junction:                "{{ junction_item.stateful | default(omit, true) }}"
+      client_ip_http:                   "{{ junction_item.client_ip_http | default(omit, true) }}"
+      scripting_support:                "{{ junction_item.scripting_support | default(omit, true) }}"
+      junction_cookie_javascript_block: "{{ junction_item.junction_cookie_javascript_block | default(omit, true) }}"
+      server_dn:                        "{{ junction_item.server.server_dn | default(omit, true) }}"
+      query_contents:                   "{{ junction_item.urlqc | default(omit, true) }}"
+      case_sensitive_url:               "{{ junction_item.caseins | default(junction_item.server.caseins) | default(omit, true) }}"
+      windows_style_url:                "{{ junction_item.win32sup | default(junction_item.server.win32sup) | default(omit, true) }}"
+      https_port:                       "{{ junction_item.https_port | default(omit, true) }}"
+      http_port:                        "{{ junction_item.http_port | default(omit, true) }}"
+      proxy_hostname:                   "{{ junction_item.proxy_hostname | default(omit, true) }}"
+      proxy_port:                       "{{ junction_item.proxy_port | default(omit, true) }}"
+      sms_environment:                  "{{ junction_item.sms_environment | default(omit, true) }}"
+      vhost_label:                      "{{ junction_item.vhost_label | default(omit, true) }}"
+      junction_hard_limit:              "{{ junction_item.junction_hard_limit | default(80) }}"
+      junction_soft_limit:              "{{ junction_item.junction_soft_limit | default(60) }}"
+      tfim_sso:                         "{{ junction_item.tfim_sso | default(omit, true) }}"
+      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}"
+      preserve_cookie:                  "{{ junction_item.preserve_cookie | default(omit, true) }}"
+      cookie_include_path:              "{{ junction_item.cookie_include_path | default(omit, true) }}"
+      transparent_path_junction:        "{{ junction_item.transparentpath | default(omit, true) }}"
+      mutual_auth:                      "{{ junction_item.mutauthcert| default(omit, true)}}"
+      insert_session_cookies:           "{{ junction_item.insert_session_cookies | default(omit, true) }}"
+      request_encoding:                 "{{ junction_item.requestencoding | default(omit, true) }}"
+      enable_basic_auth:                "{{ junction_item.mutauthba | default(omit, true) }}"
+      key_label:                        "{{ junction_item.mutauthcertlabel | default(omit, true) }}"
+      gso_resource_group:               "{{ junction_item.gso_resource_group | default(omit, true) }}"
+      version_two_cookies:              "{{ junction_item.version_two_cookies | default(omit, true) }}"
+      ltpa_keyfile:                     "{{ junction_item.ltpa_keyfile | default(omit, true) }}"
+      authz_rules:                      "{{ junction_item.authz_rules | default(omit, true) }}"
+      fsso_config_file:                 "{{ junction_item.fsso_config_file | default(omit, true) }}"
+      username:                         "{{ junction_item.username | default(omit, true) }}"
+      password:                         "{{ junction_item.password | default(omit, true) }}"
+      local_ip:                         "{{ junction_item.local_ip | default(omit, true) }}"
+      ltpa_keyfile_password:            "{{ junction_item.ltpa_keyfile_password | default(omit, true) }}"
+      delegation_support:               "{{ junction_item.delegation_support | default(omit, true) }}"
+      insert_ltpa_cookies:              "{{ junction_item.insert_ltpa_cookies | default(omit, true) }}"
+  # failed_when:
+  #   - ret_junction_replace.rc > 0
+  #   - "'DPWWA1222E' not in ret_junction_replace.message"
+  loop: "{{ isamva_proxy_junctions | selectattr('state', 'eq', 'replace') }}"
+  loop_control:
+    label: "{{ junction_item.name }}:{{ junction_item.server.host }}:{{ junction_item.server.port }}"
+    loop_var: junction_item
+  register: ret_junction_replace
+  vars:
+    ansible_command_timeout: 120
+  when:
+    - isamva_proxy_junctions | selectattr('state', 'eq', 'replace') | length > 0
+    - junction_item.server != ''
+  ignore_errors: true
+  tags: always
+
+- name: Add Additional Servers
+  include_tasks: "add_servers.yml"
+  loop: "{{ isamva_proxy_junctions }}"
+  loop_control:
+    label: "{{ junction_item.name }}"
+    loop_var: junction_item
+  when:
+    - junction_item.state == 'replace' or (ret_junction_add.changed | default(false))
+    - junction_item.servers | default([]) | length > 0
+  tags: always

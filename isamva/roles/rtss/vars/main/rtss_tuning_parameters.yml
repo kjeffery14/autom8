@@ -1,0 +1,57 @@
+---
+# isamva/roles/rtss/vars/main/rtss_tuning_parameters.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_tuning_parameters:
+- option: "accept_client_certs"
+  value: "{{ rtss_runtime_accept_client_certs }}"
+- option: "auto_reload"
+  value: "{{ rtss_runtime_auto_reload }}"
+- option: "auto_restart"
+  value: "{{ rtss_runtime_auto_restart }}"
+- option: "console_log_level"
+  value: "{{ rtss_runtime_console_log_level }}"
+- option: "dns_resolution_cache_lifetime"
+  value: "{{ rtss_runtime_dns_resolution_cache_lifetime }}"
+- option: "enable_crldp"
+  value: "{{ rtss_runtime_enable_crldp }}"
+- option: "enable_sso"
+  # enable LTPA authentication
+  value: "{{ rtss_runtime_enable_sso }}"
+- option: "enabled_server_protocols"
+  value: "TLSv1.2"
+  version: "9.0.6"
+- option: "max_files"
+  # https://github.com/IBM-Security/isam-support/blob/master/tuning/ISAM_Tuning.xlsx - default: 20
+  value: "{{ rtss_runtime_max_files }}"
+- option: "max_file_size"
+  # https://github.com/IBM-Security/isam-support/blob/master/tuning/ISAM_Tuning.xlsx - default: 2
+  value: "{{ rtss_runtime_max_file_size }}"
+- option: "max_heap_size"
+  value: "{{ rtss_runtime_max_heap_size }}"
+- option: "max_pool_size"
+  value: "{{ rtss_runtime_max_pool_size }}"
+- option: "max_threads"
+  value: "0" # default: unset (-1 or 0 to set to unlimited)
+  version: "9.0.6"
+- option: "min_heap_size"
+  value: "{{ rtss_runtime_min_heap_size }}"
+- option: "min_threads"
+  value: "0" # default: unset (-1 or 0 to set to number of hardware threads)
+  version: "9.0.6"
+- option: "session_invalidation_timeout"
+  # This parameter defines the amount of time a session can remain unused before it is no longer valid. Default 600 seconds (unset).
+  value: "{{ rtss_runtime_session_invalidation_timeout }}"
+- option: "session_max_count"
+  # Maximum Session Count   Default: 250000
+  value: "{{ rtss_runtime_session_max_count }}"
+  version: "9.0.6"
+- option: "session_reaper_poll_interval"
+  # https://github.com/IBM-Security/isam-support/blob/master/tuning/ISAM_Tuning.xlsx - default: 600
+  value: "{{ rtss_runtime_session_reaper_poll_interval }}"
+- option: "suppress_sensitive_trace"
+  value: "{{ rtss_runtime_suppress_sensitive_trace | default(true) }}"
+- option: "trace_specification"
+  value: "{{ rtss_runtime_trace_specification }}"
+  version: "9.0.7"

@@ -1,0 +1,24 @@
+---
+
+galaxy_info:
+  author: Kevin Jeffery
+  description: Role to Import Personal Certificates
+  company: MicroKnight
+
+  license: Apache
+
+  min_ansible_version: "2.4"
+
+  platforms:
+    - name: GenericLinux
+      versions:
+        - all
+
+  galaxy_tags:
+    - isam
+    - ibm
+    - isva
+
+dependencies:
+  - ibm.isam.common_handlers
+  

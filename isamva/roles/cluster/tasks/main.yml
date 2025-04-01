@@ -1,0 +1,92 @@
+---
+# isamva/roles/cluster/tasks/main.yml
+# @version v2025.3.28.0
+# @author Kevin Jeffery
+
+- name: Get current configuration
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.configuration.get
+  register: ret_cluster_info
+  tags: always
+
+### Create New Cluster
+- block:
+  - name: Create New Cluster
+    ibm.isam.isam:
+      action: ibmsecurity.isam.base.cluster.configuration.set
+      isamapi:
+        primary_master: "{{ isamva_cluster_config.primary_master }}"
+        first_port: "{{ isamva_cluster_config.first_port | default(omit) }}"
+        hvdb_max_size: "{{ isamva_cluster_config.hvdb_max_size | default(40) }}"
+    notify: Commit Changes and Restart
+
+  - meta: flush_handlers
+  when:
+    - ret_cluster_info.data.primary_master == '127.0.0.1'
+    - "'primary' in isamva_server_roles"
+  tags: always
+### End: Create New Cluster
+
+- name: Configure Runtime Replication
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.runtime.replication.set
+    isamapi:
+      replicating: "{{ isamva_cluster_config.runtime_replication }}"
+  when: isamva_cluster_config.runtime_replication is defined
+  tags: always
+
+- name: Configure SSL Certificate Replication
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.ssl_certificates.replication.set
+    isamapi:
+      replicating: "{{ isamva_cluster_config.ssl_certificates_replication }}"
+  when: isamva_cluster_config.ssl_certificates_replication is defined
+  tags: always
+
+- meta: flush_handlers
+  tags: always
+
+- name: Configure DSC, HVDB and CFGDB
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.configuration.set
+    # log: "DEBUG"
+    isamapi:
+      primary_master: "{{ isamva_cluster_config.primary_master }}"
+      secondary_master: "{{ isamva_cluster_config.secondary_master | default(omit) }}"
+      master_ere: "{{ isamva_cluster_config.master_ere | default(omit) }}"
+      tertiary_master: "{{ isamva_cluster_config.tertiary_master | default(omit) }}"
+      quaternary_master: "{{ isamva_cluster_config.quaternary_master | default(omit) }}"
+      first_port: "{{ isamva_cluster_config.first_port | default(omit) }}"
+      dsc_client_grace_period: "{{ isamva_cluster_config.dsc_client_grace_period | default(600) }}"
+      dsc_external_clients: "{{ isamva_cluster_config.dsc_external_clients | default(false) }}"
+      dsc_port: "{{ isamva_cluster_config.dsc_port | default(omit) }}"
+      dsc_maximum_session_lifetime: "{{ isamva_cluster_config.dsc_maximum_session_lifetime | default(3600) }}"
+      dsc_worker_threads: "{{ isamva_cluster_config.dsc_worker_threads| default(64) }}"
+      dsc_use_ssl: "{{ isamva_cluster_config.dsc_use_ssl | default(omit) }}"
+      dsc_ssl_keyfile: "{{ isamva_cluster_config.dsc_ssl_keyfile | default(omit) }}"
+      dsc_ssl_label: "{{ isamva_cluster_config.dsc_ssl_label | default(omit) }}"
+      hvdb_embedded: "{{ isamva_cluster_config.hvdb_embedded | default(omit) }}"
+      hvdb_max_size: "{{ isamva_cluster_config.hvdb_max_size | default(40) }}"
+      hvdb_db_type: "{{ isamva_cluster_config.hvdb_db_type | default(omit) }}"
+      hvdb_address: "{{ isamva_cluster_config.hvdb_address | default(omit) }}"
+      hvdb_port: "{{ isamva_cluster_config.hvdb_port | default(omit) }}"
+      hvdb_user: "{{ isamva_cluster_config.hvdb_user | default(omit) }}"
+      hvdb_password: "{{ isamva_cluster_config.hvdb_password | default(omit) }}"
+      hvdb_db_name: "{{ isamva_cluster_config.hvdb_db_name | default(omit) }}"
+      hvdb_db_secure: "{{ isamva_cluster_config.hvdb_db_secure | default(omit) }}"
+      cfgdb_embedded: "{{ isamva_cluster_config.cfgdb_embedded | default(omit) }}"
+      cfgdb_db_type: "{{ isamva_cluster_config.cfgdb_db_type | default(omit) }}"
+      cfgdb_address: "{{ isamva_cluster_config.cfgdb_address | default(omit) }}"
+      cfgdb_port: "{{ isamva_cluster_config.cfgdb_port | default(omit) }}"
+      cfgdb_user: "{{ isamva_cluster_config.cfgdb_user | default(omit) }}"
+      cfgdb_password: "{{ isamva_cluster_config.cfgdb_password | default(omit) }}"
+      cfgdb_db_name: "{{ isamva_cluster_config.cfgdb_db_name | default(omit) }}"
+      cfgdb_db_secure: "{{ isamva_cluster_config.cfgdb_db_secure | default(omit) }}"
+      ignore_password_for_idempotency: True
+  notify: 
+  - Commit Changes and Restart
+  - Restart AAC Runtime
+  tags: always
+
+- meta: flush_handlers
+  tags: always

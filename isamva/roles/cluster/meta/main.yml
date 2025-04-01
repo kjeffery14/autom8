@@ -1,0 +1,12 @@
+---
+# isamva/roles/cluster/meta/main.yml
+# @version v2025.3.28.0
+# @author Kevin Jeffery
+galaxy_info:
+  author: Kevin Jeffery
+  description: Role to configure cluster in ISAM
+  company: MicroKnight
+  license: Apache
+  min_ansible_version: 2.2
+dependencies:
+  - ibm.isam.common_handlers

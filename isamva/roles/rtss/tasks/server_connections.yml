@@ -1,0 +1,85 @@
+---
+# isamva/roles/rtss/tasks/server_connections.yml
+# @version v2025.3.28.0
+# @author Kevin Jeffery
+
+### Configure Server Connections
+- block:
+  - name: Web Service Connections
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.server_connections.ws.set
+      isamapi:
+        connection: "{{ item.connection }}"
+        description: "{{ item.description }}"
+        ignore_password_for_idempotency: True
+        locked: "{{ item.locked | default(omit) }}"
+        name: "{{ item.name }}"
+    loop: "{{ rtss_server_connections.ws }}"
+    loop_control:
+      label: "{{ item.name }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when:
+      - rtss_server_connections.ws is defined
+      - rtss_server_connections.ws | length > 0
+      - item.connection.url is defined
+    tags:
+    - server_connections
+    - web_service_connections
+
+  - name: Configure ISAM Runtime Connections
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.server_connections.isamruntime.set
+      isamapi:
+        name: "{{ item.name }}"
+        description: "{{ item.description | default(omit) }}"
+        connection: "{{ item.connection }}"
+        locked: "{{ item.locked | default(omit) }}"
+    loop: "{{ rtss_server_connections.isamruntime }}"
+    loop_control:
+      label: "{{ item.name }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when:
+      - rtss_server_connections.isamruntime is defined
+      - rtss_server_connections.isamruntime | length > 0
+      - item.connection.bindDN is defined
+      - item.connection.bindPwd is defined
+    tags:
+    - server_connections
+    - isam_runtime_connections
+
+  - name: Configure LDAP Connections
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.server_connections.ldap.set
+      isamapi:
+        connection: "{{ item.connection }}"
+        connectionManager: "{{ item.connectionManager | default(rtss_ldap_connection_manager) }}"
+        description: "{{ item.description | default(omit) }}"
+        ignore_password_for_idempotency: True
+        locked: "{{ item.locked | default(omit) }}"
+        name: "{{ item.name }}"
+        servers: "{{ item.servers | default(omit) }}"
+    loop: "{{ rtss_server_connections.ldap }}"
+    loop_control:
+      label: "{{ item.name }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+    when:
+      - rtss_server_connections.ldap is defined
+      - rtss_server_connections.ldap | length > 0
+      - item.connection.bindDN is defined
+      - item.connection.bindPwd is defined
+    tags:
+    - server_connections
+    - ldap_connections
+
+  always:
+  - meta: flush_handlers
+    tags: always
+
+### End: Configure Server Connections
+

@@ -1,0 +1,150 @@
+---
+# isamva/roles/rtss/tasks/main.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+- name: Get Cluster Master
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.cluster.node.get_master
+  register: ret_master
+  tags: always
+
+- name: Set listening interfaces
+  ibm.isam.isam:
+    action: ibmsecurity.isam.base.runtime.listening_interfaces.set_by_address
+    isamapi:
+      address: "{{ item.address }}"
+      port: "{{ item.port }}"
+      secure: "{{ item.secure }}"
+  with_items: "{{ rtss_listening_interfaces }}"
+  when:
+  - rtss_listening_interfaces is defined
+  - rtss_listening_interfaces | length > 0
+  notify: Commit Changes
+  tags:
+  - rtss
+  - interfaces
+
+- meta: flush_handlers
+  tags: always
+
+# - name: Point of Contact Profiles
+#   ansible.builtin.include_tasks: poc_profiles.yml
+#   when:
+#     - ret_master.data.is_master | bool
+#   tags:
+#   - rtss
+#   - point_of_contact
+
+# - name: Server Cleanup
+#   ansible.builtin.include_tasks: server_cleanup.yml
+#   tags:
+#   - rtss
+#   - server_cleanup
+#   - password_rotation
+
+# - meta: flush_handlers
+#   tags: always
+
+- name: Advanced Configuration
+  ansible.builtin.include_tasks: "{{ 'advanced_configuration_tags.yml' if 'advanced_configuration_tags' in ansible_run_tags else 'advanced_configuration.yml' }}"
+  when:
+    - ret_master.data.is_master | bool
+  tags:
+  - rtss
+  - advanced_configuration
+  - advanced_configuration_tags
+
+- name: Runtime Parameters
+  ansible.builtin.include_tasks: runtime_parameters.yml
+  tags:
+  - rtss
+  - runtime_parameters
+
+# - name: Risk Profiles
+#   ansible.builtin.include_tasks: risk_profiles.yml
+#   when: 
+#     - ret_master.data.is_master | bool
+#     - (cluster_mga_risk_profile is defined or mga_risk_profile is defined)
+#     - isam_version is version('9.0.6.0', 'ge')
+#   tags:
+#   - rtss
+#   - risk_profile
+
+- name: User Registry
+  ansible.builtin.include_tasks: user_registry.yml
+  tags:
+  - rtss
+  - user_registry
+
+- name: Server Connections
+  ansible.builtin.include_tasks: server_connections.yml
+  when:
+    - ret_master.data.is_master | bool
+  tags:
+  - rtss
+  - isam_runtime_connections
+  - ldap_connections
+  - server_connections
+  - web_service_connections
+
+- name: SCIM Configuration
+  ansible.builtin.include_tasks: scim_configuration.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_scim_config is defined
+    - rtss_scim_config.keys() | length > 0
+  tags:
+  - rtss
+  - scim_configuration
+
+- name: Mapping Rules
+  ansible.builtin.include_tasks: mapping_rules.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_mapping_rules_list is defined
+    - rtss_mapping_rules_list | selectattr('state', 'eq', 'present') | length > 0
+  tags:
+  - rtss
+  - mapping_rules
+
+- name: Authentication Mechanisms
+  ansible.builtin.include_tasks: authentication_mechanisms.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_authentication_mechanisms_list is defined
+    - rtss_authentication_mechanisms_list | selectattr('state', 'eq', 'present') | length > 0
+  tags:
+  - authentication_mechanisms
+  - rtss
+
+- name: Authentication Policies
+  ansible.builtin.include_tasks: authentication_policies.yml
+  when:
+    - ret_master.data.is_master | bool
+    - rtss_authentication_policies_list is defined
+    - rtss_authentication_policies_list | length > 0
+  tags:
+  - authentication_policies
+  - rtss
+
+# - name: MMFA Configuration
+#   ansible.builtin.include_tasks: mmfa_configuration.yml
+#   when:
+#     - ret_master.data.is_master | bool
+#     - config_rtss_mmfa_configuration.client_id is defined
+#     - config_rtss_mmfa_clients | length > 0
+#     - config_rtss_mmfa_definitions | length > 0
+#   tags:
+#   - rtss
+#   - mmfa_configuration
+
+# - name: FIDO2 Configuration
+#   ansible.builtin.include_tasks: fido2_configuration.yml
+#   when:
+#     - ret_master.data.is_master | bool
+#     - config_rtss_fido2_relying_parties | length > 0
+#     - config_rtss_fido2_relying_parties | selectattr('state', 'eq', 'present') | length > 0
+#   tags:
+#   - rtss
+#   - fido2_configuration

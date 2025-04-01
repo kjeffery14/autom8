@@ -1,0 +1,109 @@
+---
+# isamva/roles/rtss/defaults/main.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_fido2_attestation_publicKeyAlgorithms:
+    - SHA256withECDSA
+    - SHA256withRSA
+rtss_fido2_attestation_statementFormats:
+  - fido-u2f
+  - packed
+  - tpm
+  - android-key
+  - android-safetynet
+  - apple
+  - none
+rtss_fido2_attestation_statementTypes:
+  - basic
+  - self
+  - attCA
+  - anonCA
+  - none
+rtss_fido2_android_attestationMaxAge: 60000
+rtss_fido2_android_clockSkew: 30000
+rtss_fido2_impersonationGroup: adminGroup
+rtss_fido2_origins: []
+rtss_fido2_webauthnSpecEnforcement: true
+
+rtss_attributeCollection_authenticationContextAttributes: "resource,action,ac.uuid,header:userAgent,transferAmount"
+rtss_attributeCollection_cookieName: ac.uuid
+rtss_attributeCollection_enableGetAttributes: 'true'
+rtss_attributeCollection_hashAlgorithm: SHA-256
+rtss_attributeCollection_hashedAuthenticationContextAttributes: ''
+rtss_attributeCollection_requestServer: '*'
+rtss_attributeCollection_serviceLocation: "{{ rtss_junction_name }}"
+rtss_attributeCollection_sessionTimeout: '1800'
+rtss_authsvc_stateMgmt_cookieless: 'false'
+rtss_authsvc_stateMgmt_HVDB_cleanupThread_batchSize: '1000'
+rtss_authsvc_stateMgmt_HVDB_cleanupWait: '-1'
+rtss_authsvc_stateMgmt_HVDB_maxSessions: '1000'
+rtss_authsvc_stateMgmt_store: "{{ 'DSC' if rtss_distributedSessionCache_enabled | bool  else 'DMap' }}"
+rtss_default_keystore_name: rt_profile_keys
+rtss_deviceRegistration_allowIncompleteFingerprints: "true"
+rtss_deviceRegistration_maxRegisteredDevices: '10'
+rtss_deviceRegistration_permitOnIncompleteFingerprint: 'true'
+rtss_distributedMap_cleanupWait: "0"
+rtss_distributedSessionCache_enabled: "false"
+rtss_jwks_encryption_keystore: "{{ rtss_default_keystore_name }}"
+rtss_jwks_signing_keystore: "{{ rtss_default_keystore_name }}"
+rtss_junction_name: '/mga'
+rtss_kess_crlEnabled: 'false'
+rtss_kess_validateCertPath: 'false'
+rtss_live_demos_enabled: 'false'
+rtss_live_demos_settings: ''
+rtss_mmfa_authenticator_cleanupWait: '0'
+rtss_mmfa_completionResponse_legacyBehavior: 'false'
+rtss_mmfa_devicePrompt_skipIfOneDevice: 'false'
+rtss_mmfa_transactionPending_cleanupInterval: '0'
+rtss_oauth20_authorize_stateRequired: 'true'
+rtss_oauth20_cleanupThreadBatchSize: '1000'
+rtss_oauth20_clientDataToInclude: "contact_type, email_address, contact_person, company_name, company_url, phone_number, other_info"
+rtss_oauth20_introspectEndpointEnabled: 'true'
+rtss_oauth20_sessionEndpointEnabled: 'false'
+rtss_oauth20_tokenCache_cleanupOnlyOnPrimaryMaster: 'true'
+rtss_oauth20_tokenCache_cleanupWait: '0'
+rtss_opt_email_smtpTlsProtocol: TLSv1
+rtss_otp_retry_enabled: 'true'
+rtss_pip_uncachedAttributes: ''
+rtss_poc_otp_authLevel: '2'
+rtss_riskEngine_reportsEnabled: 'false'
+rtss_runtime_accept_client_certs: 'false'
+rtss_runtime_auto_reload: 'true'
+rtss_runtime_auto_restart: 'true'
+rtss_runtime_console_log_level: 'OFF'
+rtss_runtime_dns_resolution_cache_lifetime: '30'
+rtss_runtime_enable_crldp: 'false'
+rtss_runtime_enable_sso: 'false'
+rtss_runtime_keystore_label: server
+rtss_runtime_keystore: "{{ rtss_default_keystore_name }}"
+rtss_runtime_max_file_size: '100'
+rtss_runtime_max_files: '50'
+rtss_runtime_max_heap_size: '2048'
+rtss_runtime_max_pool_size: '100'
+rtss_runtime_min_heap_size: '2048'
+rtss_runtime_session_invalidation_timeout: '1800'
+rtss_runtime_session_max_count: '250000'
+rtss_runtime_session_reaper_poll_interval: '30'
+rtss_runtime_trace_specification: "com.tivoli.am.fim.trustserver.sts.utilities.IDMappingExtUtils=SEVERE"
+rtss_runtime_truststore: "{{ rtss_default_keystore_name }}"
+rtss_runtime_verificationHashAlgorithms: SHA-256
+rtss_scim_user_profile_ldap_object_classes:
+- top
+- person
+- organizationalPerson
+- inetOrgPerson
+rtss_session_dbCleanupInterval: "0"
+rtss_session_store: "{{ 'DSC' if rtss_distributedSessionCache_enabled | bool  else 'DMap' }}"
+rtss_sps_adminGroup: ''
+rtss_sps_authService_policyKickoffMethod: 'both'
+rtss_sps_doNotSendXFrameOptionsHeader: 'false'
+rtss_sps_httpRequestClaims_enabled: 'false'
+rtss_sps_page_hiddenMacros: "@EXCEPTION_STACK@"
+rtss_sps_page_htmlEscapedMacros: "@DETAIL@,@ERROR_DESCRIPTION@,@ERROR_MESSAGE@,@EXCEPTION_MSG@,@EXCEPTION_STACK@,@MAPPING_RULE_DATA@,@OTP_HINT@,@OTP_METHOD_ID@,@OTP_METHOD_LABEL@,@REQ_ADDR@,@TOKEN:RelayState"
+rtss_sps_page_junctionMacro: "{{ rtss_junction_name }}"
+rtss_sps_page_notEscapedMacros: "@COOKIE_NAME@,@SERVER_NAME@,@JUNCTION@,@U2F_TOKENS@,@ACTION@,@AUTH_METHODS@,@AUTHENTICATORS@,@SIGNATURE_METHODS@,@TRANSIENT_METHODS@,@OAUTH_CLIENT_OPTIONS@,@OAUTH_CLIENT_DATA_MACRO@,@RESPONSE_TYPES@,@RESPONSE_MODES@,@GRANT_TYPES@,@SIGNING_ALG@,@ENCRYPTION_ALG@,@ENCRYPTION_ENC@,@WCT@,@WCTX@,@WRESULT@,@WA@,@TOKEN:RelayState@,@TOKEN:SamlMessage@,@FIDO_EXTENSIONS@,@FIDO_ALLOW_CREDENTIALS@,@FIDO2_RELYING_PARTIES@,@SUBJECT_TYPES_SUPPORTED@,@TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED@,@FIDO_PUBKEY_CRED_PARAMS@,@FIDO_EXCLUDED_CREDENTIALS@"
+rtss_util_httpClient_defaultSSLProtocol: 'TLSv1.2'
+rtss_util_httpClient_defaultTrustStore: "{{ rtss_default_keystore_name }}"
+rtss_util_httpClientv2_maxConnections: '*=200'
+rtss_util_httpClientv2_socketTimeout: '*=5'

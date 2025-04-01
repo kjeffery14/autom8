@@ -1,0 +1,58 @@
+---
+# isamva/roles/rtss/vars/main/rtss_mmfa.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_mmfa:
+- key: "mmfa.authenticator.cleanupWait"
+  # set to 3600 on cleanup node/master
+  value: "{{ rtss_mmfa_authenticator_cleanupWait }}"
+  tags:
+  - "mmfa"
+  - "hvdb_cleanup"
+- key: "mmfa.completionResponse.legacyBehavior"
+  # TODO Verify this parameter is deprecated.  Not in 10.0.3 documentation
+  # Default is false
+  value: "{{ rtss_mmfa_completionResponse_legacyBehavior }}"
+  # deprecated: "10.0.2.0"
+  tags:
+  - "mmfa"
+- key: "mmfa.devicePrompt.skipIfOneDevice"
+  value: "{{ rtss_mmfa_devicePrompt_skipIfOneDevice }}"
+  version: "9.0.6"
+  tags:
+  - "mmfa"
+- key: "mmfa.devicePrompt.validateChosen"
+  value: "true"
+  version: "9.0.6"
+  tags:
+  - "mmfa"
+- key: "mmfa.silentpush.enabled"
+  # Indicates whether the IBM Verify silent push payload is enabled or disabled.
+  value: "true" # Default
+  version: "10.0.3"
+  tags:
+  - "mmfa"
+- key: "mmfa.transaction.cleanupOnlyOnPrimaryMaster"
+  value: "true"
+  tags:
+  - "mmfa"
+  - "hvdb_cleanup"
+- key: "mmfa.transactionArchival.maxCompletedPerUser"
+  value: "-1"
+  tags:
+  - "mmfa"
+- key: "mmfa.transactionArchival.maxPendingPerUser"
+  value: "-1"
+  tags:
+  - "mmfa"
+- key: "mmfa.transactionPending.cleanupInterval"
+  # set to 150 on cleanup node/master
+  value: "{{ rtss_mmfa_transactionPending_cleanupInterval }}"
+  tags:
+  - "mmfa"
+  - "hvdb_cleanup"
+- key: "mmfa.transactionPending.minAgeBeforeAbort"
+  value: "300"
+  tags:
+  - "mmfa"

@@ -1,0 +1,31 @@
+---
+# isamva/roles/rtss/tasks/authentication_mechanisms.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+### Authentication Mechanisms Configuration
+- block:
+  - name: ISAM RTSS Authentication Mechanisms
+    ibm.isam.isam:
+      action: ibmsecurity.isam.aac.authentication.mechanisms.set
+      isamapi:
+        name: "{{ item.name }}"
+        uri: "{{ item.uri }}"
+        description: "{{ item.description | default(omit) }}"
+        attributes: "{{ item.attributes | default(omit) }}"
+        properties: "{{ item.properties | default(omit) }}"
+        predefined: "{{ item.predefined | default(omit) }}"
+        typeName: "{{ item.typeName }}"
+    loop_control:
+      label: "{{ item.name }}"
+    loop: "{{ rtss_authentication_mechanisms_list | selectattr('state', 'eq', 'present') }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+
+  always:
+  - meta: flush_handlers
+    tags: always
+
+  tags: always
+### End: Mapping Rules Configuration

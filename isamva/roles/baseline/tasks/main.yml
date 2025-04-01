@@ -1,13 +1,20 @@
 ---
 # isamva/roles/baseline/main.yml.yml
-# @version v2025.2.17
+# @version v2025.3.23.0
 # @author Kevin Jeffery
 
 - name: Enable FIPS, Accept SLA, Complete Setup
   ansible.builtin.include_role:
     name: ibm.isam.base.first_steps
+    apply:
+      tags:
+      - first_steps
+      - baseline
   vars:
     FIPS_cfg: "{{ isamva_fips_cfg }}"
+  tags:
+  - first_steps
+  - baseline
   
 - name: Check Admin Password
   ansible.builtin.uri:
@@ -23,20 +30,37 @@
       Accept: application/json
   check_mode: false
   register: result
+  tags:
+  - admin_password
+  - baseline
 
 - name: Change Admin Password if necessary
   ansible.builtin.include_role:
     name: ibm.isam.base.change_admin_password
+    apply:
+      tags:
+      - admin_password
+      - baseline
   vars:
     old_password: "{{ isamva_old_password }}"
     new_password: "{{ isamva_new_password }}"
   when:
     - result is defined
     - result.status == 200
+  tags:
+  - admin_password
+  - baseline
 
 - name: Configure Interfaces
   ansible.builtin.include_role:
     name: ibm.isam.base.configure_interfaces
+    apply:
+      tags:
+      - interfaces
+      - baseline
+  tags:
+  - baseline
+  - interfaces
 
 - name: Set Applicance Hostname
   ansible.builtin.include_role:
@@ -67,6 +91,7 @@
   when: isamva_host_records is defined
 
 - meta: flush_handlers
+  tags: always
 
 - name: Activate Modules
   ansible.builtin.include_role:
@@ -82,13 +107,14 @@
 
 - name: Update Management Certificate
   ansible.builtin.include_role:
-    name: ibm.isam.base.set_management_ssl_certificate
+    name: ibm.isam.base.set_management_ssl_cert
   vars:
     update_management_ssl_cert_cert: "{{ isamva_lmi_cert_item.name }}"
     update_management_ssl_cert_pwd: "{{ isamva_lmi_cert_item.pwd }}"
   when: isamva_lmi_cert_item is defined
 
 - meta: flush_handlers
+  tags: always
 
 - name: Advanced Tuning Parameters
   ansible.builtin.include_role:
@@ -127,21 +153,74 @@
   notify: Commit Changes and Restart
 
 - meta: flush_handlers
+  tags: always
 
-# - name: Import Signer Certificates
-#   include_role:
-#     name: isam_config/import_signer_certificates
-#   vars:
-#     kdb_item:
-#       name: "rt_profile_keys"
-#       kdb: "rt_profile_keys.kdb"
-#     signer_certificates: "{{ isamva_signer_certificates }}"
-#     expired_certificates:
-#       - label: "CN=*.ice.ibmcloud.com,O=International Business Machines Corporation,L=Armonk,ST=New York,C=US"
+- name: Create Keystores
+  ansible.builtin.include_role:
+    name: ibm.isam.base.create_ssl_certificate_databases
+    apply:
+      tags: keystores
+  vars:
+    create_certificate_databases: "{{ isamva_keystore_list }}"
+  when: isamva_keystore_list is defined
+  tags: keystores
 
-# - meta: flush_handlers
+- meta: flush_handlers
 
-# - name: Configure System Alert Forwarding
-#   include_role:
-#     name: isam_config/system_alerts
-#   when: isamva_system_alerts is defined
+- name: Import Signer Certificates
+  ansible.builtin.include_role:
+    name: autom8.isamva.import_signer_certificates
+    apply:
+      tags: keystores
+  vars:
+    isamva_signer_certificates: "{{ keystore_item.signer_certs }}"
+    isamva_kdb_name: "{{ keystore_item.kdb_name }}"
+  loop: "{{ isamva_keystore_list }}"
+  loop_control:
+    label: "{{ keystore_item.kdb_name }}"
+    loop_var: keystore_item
+  when: isamva_keystore_list is defined
+  tags: keystores
+
+- name: Import Personal Certificates
+  ansible.builtin.include_role:
+    name: autom8.isamva.import_personal_certificates
+    apply:
+      tags: keystores
+  vars:
+    isamva_kdb_name: "{{ keystore_item.kdb_name }}"
+    isamva_personal_certificates: "{{ keystore_item.private_keys }}"
+  loop: "{{ isamva_keystore_list }}"
+  loop_control:
+    label: "{{ keystore_item.kdb_name }}"
+    loop_var: keystore_item
+  when: isamva_keystore_list is defined
+  tags: keystores
+
+- meta: flush_handlers
+  tags: always
+
+- name: Configure Web Runtime
+  ansible.builtin.include_role:
+    name: ibm.isam.web.configure_policyserver
+    apply:
+      tags: web_runtime
+  vars:
+    policyserver_runtime: "{{ isamva_web_runtime }}"
+  when: isamva_web_runtime is defined
+  tags: web_runtime
+
+- name: Set LDAP timeout to non-zero value
+  ibm.isam.isam:
+    action: ibmsecurity.isam.web.runtime.configuration.entry.set
+    isamapi:
+      resource_id: ldap.conf
+      stanza_id: ldap
+      entries:
+      - ["connection-inactivity", "{{ isamva_ldap_timeout | default('270') }}"]
+  notify:
+  - Commit Changes
+  - Restart Web Runtime
+  tags:
+  - baseline
+  - web_runtime

@@ -1,0 +1,58 @@
+---
+# isamva/roles/rtss/tasks/runtime_parameters.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+### ISAM Runtime Tuning - Standalone and Primary Master
+- block:
+  - name: ISAM RTSS Runtime Tuning
+    ibm.isam.isam:
+      action: ibmsecurity.isam.base.runtime.tuning_parameters.set
+      isamapi:
+        option: "{{ item.option }}"
+        value: "{{ item.value }}"
+    loop_control:
+      label: "{{ item.option }}"
+    loop: "{{ rtss_tuning_parameters }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+ 
+  always:
+  - meta: flush_handlers
+
+  when:
+  - ret_master.data.is_master | bool
+  - (item.version is not defined) or (isam_version is version(item.version, 'ge'))
+  - (item.deprecated is not defined) or (isam_version is version(item.deprecated, 'lt'))
+  tags: always
+### End: ISAM Runtime Tuning - Standalone and Primary Master
+
+### ISAM Runtime Keystore -  DSC, Member and Standalone
+- block:
+  - name: ISAM RTSS Runtime Tuning
+    ibm.isam.isam:
+      action: ibmsecurity.isam.base.runtime.tuning_parameters.set
+      isamapi:
+        option: "{{ item.option }}"
+        value: "{{ item.value }}"
+    loop_control:
+      label: "{{ item.option }}"
+    loop:
+    - option: truststore
+      value: "{{ rtss_runtime_truststore }}"
+    - option: keystore
+      value: "{{ rtss_runtime_keystore }}"
+    - option: keystore_label
+      value: "{{ rtss_runtime_keystore_label }}"
+    notify:
+    - Commit Changes
+    - Restart AAC Runtime
+  always:
+  - meta: flush_handlers
+
+  when:
+  - (item.version is not defined) or (isam_version is version(item.version, 'ge'))
+  - (item.deprecated is not defined) or (isam_version is version(item.deprecated, 'lt'))
+  tags: always
+### End: ISAM Runtime Keystore -  DSC, Member and Standalone

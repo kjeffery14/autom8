@@ -1,0 +1,69 @@
+---
+# isamva/roles/rtss/vars/main/rtss_oauth20.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_oauth20:
+- key: "oauth20.authorize.stateRequired"
+  # Specifies state as a required parameter in authorization code flow.
+  # For OIDC conformance, set to false.
+  value: "{{ rtss_oauth20_authorize_stateRequired }}"
+  version: "9.0.7"
+  tags:
+  - "oauth20"
+- key: "oauth20.backwardCompatibilityEnabled"
+  value: "false"
+  tags:
+  - "oauth20"
+- key: "oauth20.cleanupThread.batchSize"
+  value: "{{ rtss_oauth20_cleanupThreadBatchSize }}"
+  tags:
+  - "oauth20"
+  - "hvdb_cleanup"
+- key: "oauth20.clientCacheLifetime"
+  value: "5"
+  tags:
+  - "oauth20"
+- key: "oauth20.clientDataToInclude"
+  value: "{{ rtss_oauth20_clientDataToInclude }}"
+  tags:
+  - "oauth20"
+- key: "oauth20.deviceFlow.slowDownThreshhold"
+  value: "2"
+  version: "9.0.6"
+  tags:
+  - "oauth20"
+- key: "oauth20.doNotSendXFrameOptionsHeader"
+  value: "false"
+  tags:
+  - "oauth20"
+- key: "oauth20.hashedTokenStorageEnabled"
+  value: "{{rtss_oauth20_hashedTokenStorageEnabled | default('true') }}"
+  tags:
+  - "oauth20"
+- key: "oauth20.introspectEndpointEnabled"
+  value: "{{ rtss_oauth20_introspectEndpointEnabled }}"
+  tags:
+  - "oauth20"
+- key: "oauth20.legacyAttributeHandling"
+  value: "true"
+  version: "9.0.6"
+  tags:
+  - "oauth20"
+- key: "oauth20.sessionEndpointEnabled"
+  value: "{{ rtss_oauth20_sessionEndpointEnabled }}"
+  tags:
+  - "oauth20"
+- key: "oauth20.tokenCache.cleanupOnlyOnPrimaryMaster"
+  # Best practice to only cleanup on primary master in a cluster
+  # Legacy value is FALSE (default)
+  value: "{{ rtss_oauth20_tokenCache_cleanupOnlyOnPrimaryMaster }}"
+  tags:
+  - "oauth20"
+  - "hvdb_cleanup"
+- key: "oauth20.tokenCache.cleanupWait"
+  # set to 300 on cleanup node/master
+  value: "{{ rtss_oauth20_tokenCache_cleanupWait }}"
+  tags:
+  - "oauth20"
+  - "hvdb_cleanup"

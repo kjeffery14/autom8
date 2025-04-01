@@ -1,0 +1,389 @@
+---
+# isamve?roles/rtss/vars/main/rtss_common_configuration.yml
+# @version v2025.3.27.0
+# @author Kevin Jeffery
+
+rtss_common_configuration:
+- key: "basicLdapUser.ldap.maxBinds"
+  value: "5"
+  tags:
+  - "basicLdapUser"
+- key: "basicLdapUser.ldap.minBinds"
+  value: "1"
+  tags:
+  - "basicLdapUser"
+- key: "consentDeviceRegistration.authLevelHeaderEnabled"
+  value: "false"
+  tags:
+  - "consentDeviceRegistration"
+- key: "consentDeviceRegistration.authLevelHeaderValue"
+  value: "2"
+  tags:
+  - "consentDeviceRegistration"
+- key: "deviceRegistration.allowIncompleteFingerprints"
+  value: "{{ rtss_deviceRegistration_allowIncompleteFingerprints }}"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.checkForExpiredDevices"
+  value: "false"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.deviceMatchThreshold"
+  value: "20"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.inactiveExpirationTime"
+  value: "90"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.maxRegisteredDevices"
+  value: "{{ rtss_deviceRegistration_maxRegisteredDevices }}"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.maxUsageDataPerUser"
+  value: "200"
+  tags:
+  - "deviceRegistration"
+- key: "deviceRegistration.permitOnIncompleteFingerprint"
+  value: "{{ rtss_deviceRegistration_permitOnIncompleteFingerprint }}"
+  tags:
+  - "deviceRegistration"
+- key: "distributedMap.defaultTTL"
+  value: "3600"
+  tags:
+  - "distributedMap"
+- key: "distributedMap.getRetryDelay"
+  value: "0"
+  tags:
+  - "distributedMap"
+- key: "distributedMap.getRetryLimit"
+  value: "0"
+  tags:
+  - "distributedMap"
+- key: "ipReputation.dbConnectionTimeout"
+  value: "120" # Default
+  tags:
+  - "ipReputation"
+- key: "ipReputation.ipAddressAdverseReputationThreshold"
+  value: "50"
+  tags:
+  - "ipReputation"
+- key: "jwks.encryption.keystore"
+  value: "{{ rtss_jwks_encryption_keystore }}"
+  tags:
+  - "jwks"
+- key: "jwks.signing.keystore"
+  value: "{{ rtss_jwks_signing_keystore }}"
+  tags:
+  - "jwks"
+- key: "kess.crlEnabled"
+  value: "{{ rtss_kess_crlEnabled }}"
+  tags:
+  - "kess"
+- key: "kess.crlInterval"
+  value: "0"
+  tags:
+  - "kess"
+# - key: "kess.excludeInclusiveNamespacePrefixes"
+#   value: ""
+#   version: "9.0.6"
+#   tags:
+#   - "kess"
+- key: "kess.hostnameValidationDisabled"
+  value: "false"
+  tags:
+  - "kess"
+- key: "kess.keySelectionCriteria"
+  value: "only.alias"
+  tags:
+  - "kess"
+- key: "kess.validateCertPath"
+  value: "{{ rtss_kess_validateCertPath }}" # Default: true
+  version: "10.0.3.1"
+  tags:
+  - "kess"
+  - "kess.validateCertPath"
+- key: "knowledge.questions.AnswerValidationRegEx"
+  value: "[\\[()<>,;:\\\\/\\\"\\]=]" # [\[()<>,;:\\/\\"\]=]
+  tags:
+  - "knowledge.questions"
+- key: "knowledge.questions.QuestionValidationRegEx"
+  value: "[\\[()<>,;:\\\\/\\\"\\]=]"
+  tags:
+  - "knowledge.questions"
+- key: "live.demos.enabled"
+  value: "{{ rtss_live_demos_enabled }}"
+  tags:
+  - "live.demos"
+- key: "live.demos.settings"
+  value: "{{ rtss_live_demos_settings }}"
+  version: "9.0.6"
+  tags:
+  - live.demos
+  - live.demos.settings
+- key: "otp.email.smtpTlsProtocol"
+  value: "{{ rtss_opt_email_smtpTlsProtocol }}"
+  tags:
+  - "otp"
+  - "otp.email"
+- key: "otp.retry.enabled"
+  value: "{{ rtss_otp_retry_enabled }}"
+  tags:
+  - "otp"
+- key: "otp.retry.maxNumberOfAttempts"
+  value: "6"
+  tags:
+  - "otp"
+- key: "otp.retry.otpRetryTimeout"
+  value: "300"
+  tags:
+  - "otp"
+- key: "otp.usc.legacyBehavior"
+  value: "false"
+  version: "10.0.7" #??
+  tags:
+  - "otp"
+- key: "pip.uncachedAttributes"
+  value: "{{ rtss_pip_uncachedAttributes }}"
+  tags:
+  - "pip"
+- key: "poc.authPolicy.allowRequestOverride"
+  value: "true"
+  tags:
+  - "poc"
+- key: "poc.authPolicy.authLevel"
+  value: "1"
+  tags:
+  - "poc"
+- key: "poc.authPolicy.authType"
+  value: "COMPLEMENTARY"
+  tags:
+  - "poc"
+- key: "poc.otp.authLevel"
+  value: "{{ rtss_poc_otp_authLevel }}"
+  tags:
+  - poc
+  - poc.otp
+- key: "poc.otp.backwardCompatibilityEnabled"
+  value: "false"
+  tags:
+  - poc
+  - poc.otp
+- key: "poc.websealAuth.authLevel"
+  value: "1"
+  tags:
+  - "poc"
+- key: "riskEngine.reportsEnabled"
+  value: "{{ rtss_riskEngine_reportsEnabled }}"
+  tags:
+  - "riskEngine"
+- key: "riskEngine.reportsMaxStored"
+  value: "5"
+  tags:
+  - "riskEngine"
+- key: "riskEngine.useRoundingMethod"
+  value: "false"
+  tags:
+  - "riskEngine"
+- key: "runtime.dbLoggingEnabled"
+  value: "false"
+  tags:
+  - "runtime"
+- key: "runtime.hashAlgorithm"
+  value: "SHA-256"
+  tags:
+  - "runtime"
+- key: "runtime.verificationHashAlgorithms"
+  value: "{{ rtss_runtime_verificationHashAlgorithms }}"
+  tags:
+  - "runtime"
+- key: "saml20.enableSubjectInAuthnRequest"
+  value: "false"
+  tags:
+  - "saml20"
+- key: "sts.ivcred.unauthenticated.user.name"
+  value: ""
+  tags:
+  - "sts"
+- key: "sts.ivcred.unauthenticated.user.registry.id"
+  value: ""
+  tags:
+  - "sts"
+- key: "sts.ivcred.unauthenticated.user.uuid"
+  value: ""
+  tags:
+  - "sts"
+- key: "sts.ldapAttributeCache.TTL"
+  value: "60"
+  tags:
+  - "sts"
+- key: "userBehavior.ipAddressRequestAttribute"
+  value: "urn:ibm:security:environment:http:true-client-ip"
+  tags:
+  - "userBehavior"
+- key: "userBehavior.minimumUsageHistoryRequired"
+  value: "8"
+  tags:
+  - "userBehavior"
+- key: "wsfed.idp.rstr.excluded.elements"
+  value: "default=Forwardable,Delegatable,Status,Renewing"
+  tags:
+  - "wsfed"
+- key: "authsvc.stateMgmt.cookieless"
+  # set to true to enable cookieless operation
+  value: "{{ rtss_authsvc_stateMgmt_cookieless }}"
+  version: "9.0.6"
+  tags:
+  - "authsvc"
+- key: "authsvc.stateMgmt.store"
+  # Valid options: DMap, DSC, Memory except if CONFIG database has not been upgrade then options are HVDB, Session, Memory
+  value: "{{ rtss_authsvc_stateMgmt_store }}" 
+  version: "9.0.6"
+  tags:
+  - "authsvc"
+- key: "authsvc.stateMgmt.HVDB.lifetime"
+  value: "3600"
+  version: "9.0.6"
+  deprecated: "10.0.2.0"
+  tags:
+  - "authsvc"
+- key: "authsvc.stateMgmt.HVDB.maxSessions"
+  # size of session cache, 4096 is suggested in a large environment.
+  value: "{{ rtss_authsvc_stateMgmt_HVDB_maxSessions }}"
+  version: "9.0.6"
+  deprecated: "10.0.2.0"
+  tags:
+  - "authsvc"
+- key: "js.optimizationLevel"
+  value: "0"
+  version: "9.0.6"
+  tags:
+  - "js"
+- key: "js.version"
+  value: "ES6"
+  version: "9.0.6"
+  tags:
+  - "js"
+- key: "oidc.rp.idToken.validationSkew"
+  value: "0"
+  version: "9.0.6"
+  tags:
+  - "oidc"
+- key: "saml.allowDebugMessages"
+  value: "false"
+  version: "9.0.6"
+  tags:
+  - "saml"
+- key: "saml.allowNoRecipient"
+  value: "false"
+  version: "9.0.6"
+  tags:
+  - "saml"
+- key: "saml.allowSpecificInvalidArtifactMessages"
+  value: "false"
+  version: "9.0.6"
+  tags:
+  - "saml"
+- key: "saml.assertion.includeNSPrefixList.DS"
+  value: "false"
+  version: "9.0.6"
+  tags:
+  - "saml"
+# - key: "saml20.idp.acsurlpattern"
+#   # This custom property allows regular expression matching for the AssertionConsumerService URL and the protocol endpoint.
+#   value: ""
+#   tags:
+#   - "saml"
+- key: "saml.use.legacy.clockskew.default"
+  value: "false"
+  version: "9.0.6"
+  tags:
+  - "saml"
+- key: "sts.requestTypeMapper.lru.size"
+  value: "100"
+  version: "9.0.6"
+  tags:
+  - "sts"
+- key: "authsvc.stateMgmt.lifetime"
+  value: "3600"
+  version: "10.0.2"
+  tags:
+  - "authsvc"
+- key: "authsvc.stateMgmt.memory.cleanupThread.batchSize"
+  value: "1000" # Default: 0
+  version: "10.0.2"
+  tags:
+  - "authsvc"
+  - "hvdb_cleanup"
+- key: "authsvc.stateMgmt.memory.cleanupWait"
+  value: "120" # Default
+  version: "10.0.2"
+  tags:
+  - "authsvc"
+  - "hvdb_cleanup"
+- key: "authsvc.stateMgmt.memory.maxSessions"
+  value: "{{ rtss_authsvc_stateMgmt_HVDB_maxSessions }}" # Default
+  version: "10.0.2"
+  tags:
+  - "authsvc"
+- key: "distributedMap.redisServerConnectionName"
+  value: "" # Required if distributed.store is Redis
+  version: "10.0.2"
+  tags:
+  - "distributedMap"
+- key: "distributedMap.store"
+  value: "HVDB" # Default
+  version: "10.0.2"
+  tags:
+  - "distributedMap"
+- key: "jwks.encryption.enabled"
+  value: "true"
+  version: "10.0.2"
+  tags:
+  - "jwks"
+# - key: "kessjksservice.exclude.inclusive.namespace.prefixes"
+#   # Specifies a comma-separated list of prefix names. When this is set, the prefixes in the list are not added to the InclusiveNamespaces list that is in the Signature Element.
+#   value: ""
+#   tags:
+#   - "kessjksservice"
+- key: "poc.websealSignout.terminate"
+  value: "true" # Default
+  version: "10.0.2"
+  tags:
+  - "poc"
+- key: "saml20.authn.request.provider.name.enabled"
+  # Set to true to add ProviderName value to SAML2.0 AuthnRequests.
+  value: "false"
+  version: "10.0.2"
+  tags:
+  - "saml20"
+- key: "saml20.sessionStore"
+  # Specifies the SAML 2.0 session footprint store. Valid values ["DSC", "DMap"]
+  value: "DMap"
+  version: "10.0.2"
+  tags:
+  - "saml20"
+- key: "saml20.signatureValidation.policy"
+  # If STRICT is specified, the signature must be included in the received request and it will be validated. Allowed Values: LENIENT/STRICT
+  value: "STRICT"
+  version: "10.0.2"
+  tags:
+  - "saml20"
+- key: "sts.wstrust.error.shortexception"
+  # Set this parameter to True to provide a short exception in the 'wst:Reason' for STS exceptions. When this parameter is set to False, the entire exception stack is provided in 'wst:Reason'.
+  value: "false"
+  version: "10.0.2"
+  tags:
+  - "sts"
+# - key: "username.legacyBehavior"
+#   # https://www.ibm.com/support/pages/advanced-access-control-performance-degradation
+#   value: "{{ rtss_username_legacyBehavior | default(rtss_username_legacyBehavior) | default('true') }}" # Default false in ISAM > 9.0.3
+#   version: ""
+#   tags:
+#   - ""
+# - key: ""
+#   # 
+#   value: ""
+#   version: ""
+#   tags:
+#   - ""

@@ -1,0 +1,41 @@
+---
+# isamva/roles/rtss/vars/main/rtss_state_persistence.yml
+# @version v2025.3.26.0
+# @author Kevin Jeffery
+
+rtss_state_persistence:
+# dependent on distributedSessionCache.enabled
+- key: session.store
+  value: "{{ rtss_session_store }}" # Allowed values: Unset, In-Memory, DSC, DMap
+  version: "10.0.2"
+  tags:
+  - session
+  - distributedSessionCache
+- key: distributedSessionCache.enabled
+# Note: This is a legacy configuration. It is recommended that this configuration be set to false and use session.store instead.
+  value: "{{ 'false' if isam_version is version('10.0.2', 'ge') else rtss_distributedSessionCache_enabled }}"
+  version: "10.0.0"
+  tags:
+  - session
+  - distributedSessionCache
+- key: distributedSessionCache.externalServers
+# A list of locations of the distributed session cache servers in weighted order.
+# Syntax: <primary_address>:<port>[:<ssl>];<secondary_address>:<port>[:<ssl>],...(ssl is true/false)
+  value: ""
+  version: "10.0.0"
+  tags:
+  - session
+  - distributedSessionCache
+- key: distributedSessionCache.localCacheEnabled
+  value: "false" # Default
+  version: "10.0.0"
+  tags:
+  - session
+  - distributedSessionCache
+- key: distributedSessionCache.localCacheSize
+  value: "4096"
+  version: "10.0.0"
+  tags:
+  - session
+  - distributedSessionCache
+
