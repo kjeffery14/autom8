@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# common/plugins/filters/filter_attribute_value.py
+# common/plugins/filters/filter_attribute_values.py
 # @version v2025.1.24
 # @author Kevin Jeffery
 # Ansible filter plugin: filter_attribute_values
@@ -9,8 +9,6 @@
 from ansible.errors import AnsibleFilterError
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
-
-
 
 class FilterModule(object):
     """Ansible filter plugin entry point."""
