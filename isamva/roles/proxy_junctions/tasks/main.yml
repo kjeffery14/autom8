@@ -1,6 +1,6 @@
 ---
 # isamva/roles/proxy_junctions/tasks/main.yml
-# @version v2025.3.28.0
+# @version v2025.3.29.0
 # @author Kevin Jeffery
 
 - name: Junctions
@@ -21,7 +21,7 @@
       sni_name:                         "{{ junction_item.sni | default(junction_item.server.sni) | default(omit, true) }}"
       basic_auth_mode:                  "{{ junction_item.basicauth | default(omit, true) }}"
       stateful_junction:                "{{ junction_item.stateful | default(omit, true) }}"
-      client_ip_http:                   "{{ junction_item.client_ip_http | default(omit, true) }}"
+      client_ip_http:                   "{{ junction_item.remoteaddress | default(omit, true) }}"
       scripting_support:                "{{ junction_item.scripting_support | default(omit, true) }}"
       junction_cookie_javascript_block: "{{ junction_item.junction_cookie_javascript_block | default(omit, true) }}"
       virtual_hostname:                 "{{ junction_item.server.virtual_hostname | default(omit, true) }}"
@@ -38,7 +38,7 @@
       junction_hard_limit:              "{{ junction_item.junction_hard_limit | default(80) }}"
       junction_soft_limit:              "{{ junction_item.junction_soft_limit | default(60) }}"
       tfim_sso:                         "{{ junction_item.tfim_sso | default(omit, true) }}"
-      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}"
+      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}" # Format: "['iv-user', 'iv-groups', 'iv-creds']"
       preserve_cookie:                  "{{ junction_item.preserve_cookie | default(omit, true) }}"
       cookie_include_path:              "{{ junction_item.cookie_include_path | default(omit, true) }}"
       transparent_path_junction:        "{{ junction_item.transparentpath | default(omit, true) }}"
@@ -88,7 +88,7 @@
       sni_name:                         "{{ junction_item.sni_name | default(junction_item.server.sni_name) | default(omit, true) }}"
       basic_auth_mode:                  "{{ junction_item.basicauth | default(omit, true) }}"
       stateful_junction:                "{{ junction_item.stateful | default(omit, true) }}"
-      client_ip_http:                   "{{ junction_item.client_ip_http | default(omit, true) }}"
+      client_ip_http:                   "{{ junction_item.remoteaddress | default(omit, true) }}"
       scripting_support:                "{{ junction_item.scripting_support | default(omit, true) }}"
       junction_cookie_javascript_block: "{{ junction_item.junction_cookie_javascript_block | default(omit, true) }}"
       server_dn:                        "{{ junction_item.server.server_dn | default(omit, true) }}"
@@ -104,7 +104,7 @@
       junction_hard_limit:              "{{ junction_item.junction_hard_limit | default(80) }}"
       junction_soft_limit:              "{{ junction_item.junction_soft_limit | default(60) }}"
       tfim_sso:                         "{{ junction_item.tfim_sso | default(omit, true) }}"
-      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}"
+      remote_http_header:               "{{ junction_item.clientid | default(omit, true) }}" # Format: "['iv-user', 'iv-groups', 'iv-creds']"
       preserve_cookie:                  "{{ junction_item.preserve_cookie | default(omit, true) }}"
       cookie_include_path:              "{{ junction_item.cookie_include_path | default(omit, true) }}"
       transparent_path_junction:        "{{ junction_item.transparentpath | default(omit, true) }}"
