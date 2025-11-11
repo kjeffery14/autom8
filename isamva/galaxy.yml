@@ -1,7 +1,7 @@
 ---
 namespace: autom8
 name: isamva
-version: 2025.3.26
+version: 2025.3.31
 readme: README.md
 authors:
 - Kevin Jeffery <kevin@microknight.com>
