@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # common/plugins/filters/filter_attribute_values.py
-# @version v2025.1.24
+# @version v2025.11.12
 # @author Kevin Jeffery
 # Ansible filter plugin: filter_attribute_values
 # Returns entries from a list of dictionaries where the value of a given
 # attribute is present in a provided list of values.
 
-from ansible.errors import AnsibleFilterError
 from __future__ import (absolute_import, division, print_function)
+from ansible.errors import AnsibleFilterError # type: ignore
 __metaclass__ = type
 
 class FilterModule(object):
